@@ -1,0 +1,170 @@
+{
+  "@@locale": "ar",
+  "app_name": "بوابة المستأجر",
+  "app_tagline": "منزلك في أيدٍ أمينة",
+  "welcome_back": "مرحباً بعودتك",
+  "sign_in_to_manage_your_home_services": "سجّل الدخول لإدارة خدمات منزلك.",
+  "email_or_phone_number": "البريد الإلكتروني أو رقم الهاتف",
+  "email_or_phone_number_hint": "you@example.com أو 05X XXX XXXX",
+  "password": "كلمة المرور",
+  "enter_your_password": "أدخل كلمة المرور",
+  "show_password": "إظهار كلمة المرور",
+  "hide_password": "إخفاء كلمة المرور",
+  "sign_in": "تسجيل الدخول",
+  "demo_account": "حساب تجريبي",
+  "demo_account_details": "البريد: {email}\nالهاتف: {phone}\nكلمة المرور: {password}",
+  "@demo_account_details": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      },
+      "password": {
+        "type": "String"
+      }
+    }
+  },
+  "use_demo_account": "استخدام الحساب التجريبي",
+  "incorrect_email_phone_or_password": "البريد الإلكتروني/رقم الهاتف أو كلمة المرور غير صحيحة.",
+  "logout": "تسجيل الخروج",
+  "logout_confirmation_title": "تسجيل الخروج؟",
+  "logout_confirmation_message": "ستحتاج إلى تسجيل الدخول مرة أخرى لإدارة طلباتك.",
+  "field_required_message": "هذا الحقل مطلوب",
+  "invalid_email_error_message": "أدخل بريداً إلكترونياً صحيحاً",
+  "invalid_email_or_phone_number": "أدخل بريداً إلكترونياً أو رقم هاتف صحيحاً",
+  "min_length_error_message": "يجب ألا يقل عن {count} أحرف",
+  "@min_length_error_message": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "password_must_be_at_least_n_characters": "يجب ألا تقل كلمة المرور عن {count} أحرف",
+  "@password_must_be_at_least_n_characters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "description_must_be_at_least_n_characters": "يرجى وصف المشكلة بما لا يقل عن {count} أحرف",
+  "@description_must_be_at_least_n_characters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "please_choose_a_service_type": "يرجى اختيار نوع الخدمة",
+  "please_choose_a_preferred_date": "يرجى اختيار التاريخ المفضل",
+  "errorMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "noInternetConnectionMessage": "لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.",
+  "serverNotWorking": "الخادم لا يستجيب حالياً. يرجى المحاولة لاحقاً.",
+  "cacheErrorMessage": "تعذّرت قراءة بياناتك المحفوظة.",
+  "something_went_wrong": "حدث خطأ ما",
+  "no_internet_connection": "لا يوجد اتصال بالإنترنت",
+  "looks_like_you_are_offline_please_check_your_connection_and_try_again": "يبدو أنك غير متصل. يرجى التحقق من الاتصال والمحاولة مرة أخرى.",
+  "we_couldnt_load_the_data_please_try_again": "تعذّر تحميل البيانات. يرجى المحاولة مرة أخرى.",
+  "the_requested_item_was_not_found": "لم نتمكن من العثور على هذا الطلب. ربما تمت إزالته.",
+  "could_not_access_photos": "تعذّر الوصول إلى الكاميرا أو الصور. تحقق من أذونات التطبيق في الإعدادات.",
+  "you_are_viewing_saved_data": "أنت غير متصل — يتم عرض آخر طلبات محفوظة.",
+  "retry": "إعادة المحاولة",
+  "success": "تم!",
+  "cancel": "إلغاء",
+  "done": "تم",
+  "close": "إغلاق",
+  "yes": "نعم",
+  "no": "لا",
+  "all": "الكل",
+  "unknown": "غير معروف",
+  "view_all": "عرض الكل",
+  "home": "الرئيسية",
+  "requests": "الطلبات",
+  "profile": "الملف الشخصي",
+  "welcome_home": "أهلاً بك في منزلك،",
+  "unit_number": "الوحدة {unit}",
+  "@unit_number": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "quick_services": "خدمات سريعة",
+  "recent_requests": "أحدث الطلبات",
+  "new_request": "طلب جديد",
+  "service_maintenance": "الصيانة",
+  "service_plumbing": "السباكة",
+  "service_electrical": "الكهرباء",
+  "service_ac_maintenance": "صيانة المكيّفات",
+  "service_cleaning": "التنظيف",
+  "status_pending": "قيد الانتظار",
+  "status_assigned": "تم التعيين",
+  "status_in_progress": "قيد التنفيذ",
+  "status_completed": "مكتمل",
+  "status_pending_description": "استلمنا طلبك.",
+  "status_assigned_description": "تم تعيين فني لطلبك.",
+  "status_in_progress_description": "الفني يعمل على طلبك.",
+  "status_completed_description": "تم إنجاز العمل.",
+  "current_status": "الحالة الحالية",
+  "service_requests": "طلبات الخدمة",
+  "requested_on": "طُلب في {date}",
+  "@requested_on": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "urgent": "عاجل",
+  "no_service_requests_yet": "لا توجد طلبات خدمة بعد",
+  "no_service_requests_yet_description": "عند إرسال طلب، سيظهر هنا لتتمكن من متابعة تقدّمه.",
+  "no_requests_with_status": "لا توجد طلبات بحالة {status}",
+  "@no_requests_with_status": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "try_a_different_filter": "جرّب تصفية مختلفة.",
+  "new_service_request": "طلب خدمة جديد",
+  "service_type": "نوع الخدمة",
+  "description": "الوصف",
+  "description_hint": "صف المشكلة، مثال: يوجد تسرّب ماء أسفل حوض المطبخ.",
+  "preferred_date": "التاريخ المفضل",
+  "select_a_date": "اختر تاريخاً",
+  "urgent_request": "طلب عاجل",
+  "urgent_request_description": "حدّد هذا الخيار إذا كان الطلب يحتاج إلى معالجة خلال 24 ساعة.",
+  "photo_optional": "صورة (اختياري)",
+  "add_photo": "إضافة صورة",
+  "add_photo_hint": "تساعد الصورة الفني على فهم المشكلة.",
+  "take_photo": "التقاط صورة",
+  "choose_from_gallery": "اختيار من المعرض",
+  "change_photo": "تغيير الصورة",
+  "remove_photo": "إزالة الصورة",
+  "submit_request": "إرسال الطلب",
+  "request_submitted_successfully": "تم إرسال طلبك بنجاح.",
+  "request_details": "تفاصيل الطلب",
+  "progress": "التقدّم",
+  "details": "التفاصيل",
+  "created_on": "تاريخ الإنشاء",
+  "status": "الحالة",
+  "attached_photo": "الصورة المرفقة",
+  "no_photo_attached": "لا توجد صورة مرفقة.",
+  "photo_unavailable": "الصورة غير متاحة",
+  "contact_information": "معلومات التواصل",
+  "email": "البريد الإلكتروني",
+  "phone_number": "رقم الهاتف",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "theme": "المظهر",
+  "system_default": "إعداد النظام",
+  "light": "فاتح",
+  "dark": "داكن",
+  "simulate_offline_mode": "محاكاة وضع عدم الاتصال",
+  "simulate_offline_mode_description": "خيار للمطوّر: تفشل طلبات الخادم بخطأ اتصال لعرض التعامل مع وضع عدم الاتصال."
+}
