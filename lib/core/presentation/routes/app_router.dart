@@ -1,7 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tenant_app/core/presentation/routes/guards/auth_guard.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
 import 'package:tenant_app/features/auth/presentation/screens/launcher_screen.dart';
 import 'package:tenant_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:tenant_app/features/home/presentation/screens/dashboard_home_screen.dart';
@@ -12,92 +12,74 @@ import 'package:tenant_app/features/service_requests/presentation/screens/create
 import 'package:tenant_app/features/service_requests/presentation/screens/service_request_details_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
 
-part 'app_router.gr.dart';
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
-/// `@LazySingleton()`
-final appRouterProvider = Provider<AppRouter>((ref) => AppRouter(ref));
+/// Routes that don't require a session.
+const Set<String> _publicRoutes = {LauncherScreen.routePath, SignInScreen.routePath};
 
-@AutoRouterConfig(replaceInRouteName: 'Screen,Route')
-class AppRouter extends RootStackRouter {
-  AppRouter(this._ref);
-
-  final Ref _ref;
-
-  /// Platform-aware transitions: Cupertino (with swipe-back) on iOS,
-  /// Material on Android.
-  @override
-  RouteType get defaultRouteType => const RouteType.adaptive();
-
-  @override
-  List<AutoRoute> get routes => [
-        AutoRoute(
-          page: LauncherRoute.page,
-          path: LauncherScreen.routePath,
-          initial: true,
+/// `@LazySingleton() AppRouter`. Each screen owns its `routePath` constant.
+///
+/// The `redirect` plays the role of an `AuthGuard`: any protected route
+/// opened without a session lands on sign-in.
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final router = GoRouter(
+    navigatorKey: rootNavigatorKey,
+    initialLocation: LauncherScreen.routePath,
+    redirect: (context, state) {
+      final bool isAuthenticated = ref.read(authProvider.notifier).isUserAuthenticated;
+      if (!isAuthenticated && !_publicRoutes.contains(state.matchedLocation)) {
+        return SignInScreen.routePath;
+      }
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: LauncherScreen.routePath,
+        builder: (context, state) => const LauncherScreen(),
+      ),
+      GoRoute(
+        path: SignInScreen.routePath,
+        builder: (context, state) => const SignInScreen(),
+      ),
+      // Dashboard tabs — each branch keeps its own navigation stack & state.
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => DashboardHomeScreen(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: HomeScreen.routePath, builder: (context, state) => const HomeScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: ServiceRequestsScreen.routePath,
+                builder: (context, state) => const ServiceRequestsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: ProfileScreen.routePath, builder: (context, state) => const ProfileScreen()),
+            ],
+          ),
+        ],
+      ),
+      // Full-screen pages above the tab bar.
+      GoRoute(
+        path: CreateServiceRequestScreen.routePath,
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          fullscreenDialog: true,
+          child: CreateServiceRequestScreen(initialServiceType: state.extra as ServiceType?),
         ),
-        createCustomRoute(
-          page: SignInRoute.page,
-          path: SignInScreen.routePath,
-        ),
-        AutoRoute(
-          page: DashboardHomeRoute.page,
-          path: DashboardHomeScreen.routePath,
-          guards: [AuthGuard(_ref)],
-          children: [
-            AutoRoute(
-              page: HomeRoute.page,
-              path: HomeScreen.routePath,
-              initial: true,
-            ),
-            AutoRoute(
-              page: ServiceRequestsRoute.page,
-              path: ServiceRequestsScreen.routePath,
-            ),
-            AutoRoute(
-              page: ProfileRoute.page,
-              path: ProfileScreen.routePath,
-            ),
-          ],
-        ),
-        // Must be declared before the details route so `/new` isn't parsed as an id.
-        createSlideUpRoute(
-          page: CreateServiceRequestRoute.page,
-          path: CreateServiceRequestScreen.routePath,
-          guards: [AuthGuard(_ref)],
-        ),
-        createCustomRoute(
-          page: ServiceRequestDetailsRoute.page,
-          path: ServiceRequestDetailsScreen.routePath,
-          guards: [AuthGuard(_ref)],
-        ),
-      ];
-
-  AutoRoute createCustomRoute({
-    required PageInfo page,
-    String? path,
-    List<AutoRouteGuard> guards = const [],
-  }) =>
-      AutoRoute(page: page, path: path, guards: guards);
-
-  CustomRoute createSlideUpRoute({
-    required PageInfo page,
-    String? path,
-    List<AutoRouteGuard> guards = const [],
-  }) =>
-      CustomRoute(
-        page: page,
-        path: path,
-        guards: guards,
-        fullscreenDialog: true,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final slide = Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero)
-              .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
-          final fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(parent: animation, curve: const Interval(0.0, 0.6, curve: Curves.easeOut)),
-          );
-          return FadeTransition(opacity: fade, child: SlideTransition(position: slide, child: child));
-        },
-        durationInMilliseconds: 220,
-        reverseDurationInMilliseconds: 180,
-      );
-}
+      ),
+      GoRoute(
+        path: ServiceRequestDetailsScreen.routePath,
+        builder: (context, state) => ServiceRequestDetailsScreen(requestId: state.pathParameters['id']!),
+      ),
+    ],
+  );
+  ref.onDispose(router.dispose);
+  return router;
+});

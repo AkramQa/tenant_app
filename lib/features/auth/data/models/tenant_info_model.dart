@@ -1,23 +1,39 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-part 'tenant_info_model.freezed.dart';
+class TenantInfoModel extends Equatable {
+  final String tenantId;
+  final String fullName;
+  final String? email;
+  final String? phoneNumber;
+  final String propertyName;
+  final String unitNumber;
 
-part 'tenant_info_model.g.dart';
+  const TenantInfoModel({
+    required this.tenantId,
+    required this.fullName,
+    this.email,
+    this.phoneNumber,
+    required this.propertyName,
+    required this.unitNumber,
+  });
 
-@freezed
-class TenantInfoModel with _$TenantInfoModel {
-  const TenantInfoModel._();
+  factory TenantInfoModel.fromJson(Map<String, dynamic> json) => TenantInfoModel(
+        tenantId: json['tenant_id'] as String,
+        fullName: json['full_name'] as String,
+        email: json['email'] as String?,
+        phoneNumber: json['phone_number'] as String?,
+        propertyName: json['property_name'] as String,
+        unitNumber: json['unit_number'] as String,
+      );
 
-  const factory TenantInfoModel({
-    required String tenantId,
-    required String fullName,
-    String? email,
-    String? phoneNumber,
-    required String propertyName,
-    required String unitNumber,
-  }) = _TenantInfoModel;
-
-  factory TenantInfoModel.fromJson(Map<String, dynamic> json) => _$TenantInfoModelFromJson(json);
+  Map<String, dynamic> toJson() => {
+        'tenant_id': tenantId,
+        'full_name': fullName,
+        'email': email,
+        'phone_number': phoneNumber,
+        'property_name': propertyName,
+        'unit_number': unitNumber,
+      };
 
   /// "SA" for "Sara Al Mansoori" — used by avatars.
   String get initials {
@@ -27,4 +43,7 @@ class TenantInfoModel with _$TenantInfoModel {
     final last = parts.length > 1 ? parts.last.substring(0, 1) : '';
     return '$first$last'.toUpperCase();
   }
+
+  @override
+  List<Object?> get props => [tenantId, fullName, email, phoneNumber, propertyName, unitNumber];
 }

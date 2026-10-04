@@ -1,14 +1,14 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
-import 'package:tenant_app/core/presentation/routes/app_router.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
+import 'package:tenant_app/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:tenant_app/features/home/presentation/screens/home_screen.dart';
 
-@RoutePage()
 class LauncherScreen extends ConsumerStatefulWidget {
   const LauncherScreen({super.key});
 
@@ -34,10 +34,7 @@ class _LauncherScreenState extends ConsumerState<LauncherScreen> {
     ]);
     if (!mounted) return;
 
-    AutoRouter.of(context).pushAndPopUntil(
-      authNotifier.isUserAuthenticated ? const DashboardHomeRoute() : const SignInRoute(),
-      predicate: (_) => false,
-    );
+    context.go(authNotifier.isUserAuthenticated ? HomeScreen.routePath : SignInScreen.routePath);
   }
 
   @override

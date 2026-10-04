@@ -1,9 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
-import 'package:tenant_app/core/presentation/routes/app_router.dart';
 import 'package:tenant_app/core/presentation/widgets/loader.dart';
 import 'package:tenant_app/core/presentation/widgets/responsive_center_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
@@ -13,12 +12,12 @@ import 'package:tenant_app/features/home/presentation/widgets/home_header_widget
 import 'package:tenant_app/features/home/presentation/widgets/quick_services_widget.dart';
 import 'package:tenant_app/features/home/presentation/widgets/recent_service_requests_widget.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/create_service_request_screen.dart';
 
-@RoutePage()
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
-  static const String routePath = 'home';
+  static const String routePath = '/home';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +27,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'home_fab',
-        onPressed: () => AutoRouter.of(context).push(CreateServiceRequestRoute()),
+        onPressed: () => context.push(CreateServiceRequestScreen.routePath),
         icon: const Icon(Icons.add_rounded),
         label: Text(context.l10n.new_request),
       ),
@@ -50,12 +49,12 @@ class HomeScreen extends ConsumerWidget {
                   const SpacerH12(),
                   QuickServicesWidget(
                     onServiceSelected: (serviceType) =>
-                        AutoRouter.of(context).push(CreateServiceRequestRoute(initialServiceType: serviceType)),
+                        context.push(CreateServiceRequestScreen.routePath, extra: serviceType),
                   ),
                   const SpacerH24(),
                   TitleViewAll(
                     title: context.l10n.recent_requests,
-                    onViewAllPressed: () => AutoTabsRouter.of(context).setActiveIndex(1),
+                    onViewAllPressed: () => StatefulNavigationShell.of(context).goBranch(1),
                   ),
                   const SpacerH8(),
                   const RecentServiceRequestsWidget(),

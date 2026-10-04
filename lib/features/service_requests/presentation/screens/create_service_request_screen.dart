@@ -1,10 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
-import 'package:tenant_app/core/presentation/routes/app_router.dart';
 import 'package:tenant_app/core/presentation/widgets/base_card_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/base_icon_container_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/buttons/base_elevated_button.dart';
@@ -22,17 +21,17 @@ import 'package:tenant_app/features/service_requests/data/models/service_type.da
 import 'package:tenant_app/features/service_requests/presentation/providers/create_service_request/create_service_request_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/ui-models/create_service_request_input.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_image_attachment_field.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_service_type_selection.dart';
 import 'package:tenant_app/injectable_module.dart';
 
-@RoutePage()
 class CreateServiceRequestScreen extends ConsumerStatefulWidget {
   const CreateServiceRequestScreen({this.initialServiceType, super.key});
 
   /// Pre-selected when opened from a Home quick-access tile.
   final ServiceType? initialServiceType;
 
-  static const String routePath = '/service-requests/new';
+  static const String routePath = '/create-service-request';
 
   @override
   ConsumerState<CreateServiceRequestScreen> createState() => _CreateServiceRequestScreenState();
@@ -56,7 +55,7 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
           stopLoading();
           showSuccess(customMessage: context.l10n.request_submitted_successfully);
           // Land on the Requests tab so the tenant sees the new request.
-          AutoRouter.of(context).navigate(const DashboardHomeRoute(children: [ServiceRequestsRoute()]));
+          context.go(ServiceRequestsScreen.routePath);
         case CreateServiceRequestInitial():
           break;
       }
@@ -64,9 +63,12 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
 
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.new_service_request)),
-      body: CreateServiceRequestInputFormBuilder(
-        model: CreateServiceRequestInput(serviceType: widget.initialServiceType),
-        builder: (BuildContext context, CreateServiceRequestInputForm form, Widget? child) {
+      body: ReactiveFormBuilder(
+        form: () => CreateServiceRequestInputForm.buildFormGroup(
+          CreateServiceRequestInput(serviceType: widget.initialServiceType),
+        ),
+        builder: (BuildContext context, FormGroup formGroup, Widget? child) {
+          final form = CreateServiceRequestInputForm(formGroup);
           return SafeArea(
             child: Column(
               children: [
@@ -88,7 +90,6 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
                           ),
                           const SpacerH24(),
                           BaseReactiveTextField.borderedTextField(
-                            formModel: form,
                             controller: form.descriptionControl,
                             label: context.l10n.description,
                             hintText: context.l10n.description_hint,

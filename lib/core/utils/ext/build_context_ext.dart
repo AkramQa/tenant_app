@@ -4,7 +4,7 @@ import 'package:tenant_app/core/theme/app_colors.dart';
 import 'package:tenant_app/core/theme/app_theme.dart';
 import 'package:tenant_app/core/theme/dimensions.dart';
 import 'package:tenant_app/core/theme/text_styles.dart';
-import 'package:tenant_app/gen/localizations_generated/l10n.dart';
+import 'package:tenant_app/core/l10n/app_localizations.dart';
 
 extension BuildContextExt on BuildContext {
   //* THEME *//

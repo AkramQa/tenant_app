@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
 /// Platform-adaptive switch tile bound to a `FormControl<bool>`.

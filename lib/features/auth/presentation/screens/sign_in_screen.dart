@@ -1,13 +1,12 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
-import 'package:tenant_app/core/presentation/routes/app_router.dart';
 import 'package:tenant_app/core/presentation/widgets/base_icon_container_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/buttons/base_elevated_button.dart';
 import 'package:tenant_app/core/presentation/widgets/fields/base_reactive_text_field.dart';
@@ -17,11 +16,11 @@ import 'package:tenant_app/core/presentation/widgets/screen_utils.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_breakpoints.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
+import 'package:tenant_app/features/home/presentation/screens/home_screen.dart';
 import 'package:tenant_app/features/auth/presentation/providers/sign_in/sign_in_notifier.dart';
 import 'package:tenant_app/features/auth/presentation/ui-models/sign_in_input.dart';
 import 'package:tenant_app/features/auth/presentation/widgets/demo_credentials_widget.dart';
 
-@RoutePage()
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
@@ -47,7 +46,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> with ScreenLoader, 
         case SignInSuccessful(:final signInResponse):
           stopLoading();
           ref.read(authProvider.notifier).setAuthenticated(signInResponse.tenant);
-          AutoRouter.of(context).replaceAll([const DashboardHomeRoute()]);
+          context.go(HomeScreen.routePath);
         case SignInInitial():
           break;
       }
@@ -55,9 +54,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> with ScreenLoader, 
 
     return Scaffold(
       body: SafeArea(
-        child: SignInInputFormBuilder(
-          model: SignInInput(),
-          builder: (BuildContext context, SignInInputForm form, Widget? child) {
+        child: ReactiveFormBuilder(
+          form: SignInInputForm.buildFormGroup,
+          builder: (BuildContext context, FormGroup formGroup, Widget? child) {
+            final form = SignInInputForm(formGroup);
             return Center(
               child: SingleChildScrollView(
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -88,7 +88,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> with ScreenLoader, 
                         ),
                         const SpacerH32(),
                         BaseReactiveTextField.borderedTextField(
-                          formModel: form,
                           controller: form.identifierControl,
                           nextController: form.passwordControl,
                           label: context.l10n.email_or_phone_number,
@@ -99,25 +98,22 @@ class _SignInScreenState extends ConsumerState<SignInScreen> with ScreenLoader, 
                         ),
                         const SpacerH16(),
                         BaseReactiveTextField.borderedTextField(
-                          formModel: form,
                           controller: form.passwordControl,
                           label: context.l10n.password,
                           hintText: context.l10n.enter_your_password,
                           userObscure: true,
                           autofillHints: const [AutofillHints.password],
                           prefixIcon: const Icon(Icons.lock_outline_rounded),
-                          onSubmitForm: (_) => signIn(form),
+                          onSubmitForm: () => signIn(form),
                           validationMessages: {
                             ValidationMessage.minLength: (_) =>
                                 context.l10n.password_must_be_at_least_n_characters(kMinPasswordLength),
                           },
                         ),
                         const SpacerH24(),
-                        ReactiveSignInInputFormConsumer(
-                          builder: (context, form, child) => BaseElevatedButton.primary(
-                            label: context.l10n.sign_in,
-                            onPressed: () => signIn(form),
-                          ),
+                        BaseElevatedButton.primary(
+                          label: context.l10n.sign_in,
+                          onPressed: () => signIn(form),
                         ),
                         const SpacerH24(),
                         DemoCredentialsWidget(

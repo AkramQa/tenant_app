@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,16 +19,17 @@ import 'package:tenant_app/features/service_requests/presentation/widgets/reques
 import 'package:tenant_app/features/service_requests/presentation/widgets/request_status_timeline_widget.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/urgent_tag_widget.dart';
 
-@RoutePage()
 class ServiceRequestDetailsScreen extends ConsumerStatefulWidget {
   const ServiceRequestDetailsScreen({
-    @PathParam('id') required this.requestId,
+    required this.requestId,
     super.key,
   });
 
   final String requestId;
 
-  static const String routePath = '/service-requests/:id';
+  static const String routePath = '/service-request/:id';
+
+  static String location(String requestId) => '/service-request/$requestId';
 
   @override
   ConsumerState<ServiceRequestDetailsScreen> createState() => _ServiceRequestDetailsScreenState();

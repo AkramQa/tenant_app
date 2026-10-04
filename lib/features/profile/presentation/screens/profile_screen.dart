@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,11 +18,10 @@ import 'package:tenant_app/features/auth/presentation/dialogs/logout_confirmatio
 import 'package:tenant_app/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:tenant_app/features/profile/presentation/widgets/setting_list_tile_item_widget.dart';
 
-@RoutePage()
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
-  static const String routePath = 'profile';
+  static const String routePath = '/profile';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,9 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
-import 'package:tenant_app/core/presentation/routes/app_router.dart';
 import 'package:tenant_app/core/presentation/widgets/base_card_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/base_empty_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/base_icon_container_widget.dart';
@@ -12,6 +11,8 @@ import 'package:tenant_app/core/presentation/widgets/error_view.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/create_service_request_screen.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/service_request_details_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/cached_data_banner_widget.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/service_request_card_widget.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/service_requests_shimmer_list_widget.dart';
@@ -43,7 +44,7 @@ class RecentServiceRequestsWidget extends ConsumerWidget {
               label: context.l10n.new_request,
               isFullWidth: false,
               icon: const Icon(Icons.add_rounded),
-              onPressed: () => AutoRouter.of(context).push(CreateServiceRequestRoute()),
+              onPressed: () => context.push(CreateServiceRequestScreen.routePath),
             ),
           ),
         ),
@@ -58,7 +59,7 @@ class RecentServiceRequestsWidget extends ConsumerWidget {
                 padding: EdgeInsets.only(bottom: 12.h),
                 child: ServiceRequestCardWidget(
                   serviceRequest: serviceRequest,
-                  onTap: () => AutoRouter.of(context).push(ServiceRequestDetailsRoute(requestId: serviceRequest.id)),
+                  onTap: () => context.push(ServiceRequestDetailsScreen.location(serviceRequest.id)),
                 ),
               ),
           ],

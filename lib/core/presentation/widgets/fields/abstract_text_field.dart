@@ -7,7 +7,7 @@ import 'package:tenant_app/core/presentation/widgets/fields/obscure_toggle_text.
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
-abstract class AbstractTextField<T, E> extends StatelessWidget {
+abstract class AbstractTextField extends StatelessWidget {
   const AbstractTextField({
     this.textFieldType = TextFieldType.baseTextField,
     this.label,
@@ -16,7 +16,6 @@ abstract class AbstractTextField<T, E> extends StatelessWidget {
     this.userObscure = false,
     this.suffixIcon,
     this.onSubmitForm,
-    this.onTextChanged,
     this.validationMessages,
     this.inputFormatters,
     this.textInputType,
@@ -35,8 +34,7 @@ abstract class AbstractTextField<T, E> extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Widget? suffixIcon;
   final Map<String, String Function(Object)>? validationMessages;
-  final ValueChanged<T>? onSubmitForm;
-  final ValueChanged<T>? onTextChanged;
+  final VoidCallback? onSubmitForm;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? textInputType;
   final Widget? prefixIcon;

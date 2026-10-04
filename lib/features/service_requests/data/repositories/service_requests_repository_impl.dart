@@ -83,7 +83,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   }
 
   ServiceRequestModel _withLocalImagePath(ServiceRequestModel request) =>
-      request.copyWith(localImagePath: local.resolveAttachmentPath(request.imageFileName));
+      request.copyWith(localImagePath: () => local.resolveAttachmentPath(request.imageFileName));
 
   List<ServiceRequestModel> _sortedNewestFirst(List<ServiceRequestModel> requests) =>
       requests..sort((a, b) => b.createdAt.compareTo(a.createdAt));

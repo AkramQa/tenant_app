@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reactive_forms_annotations/reactive_forms_annotations.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:separated_column/separated_column.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tenant_app/core/presentation/widgets/date_picker/adaptive_date_picker.dart';

@@ -7,7 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tenant_app/core/data/models/enum/languages_enum.dart';
 import 'package:tenant_app/core/theme/app_theme.dart';
 import 'package:tenant_app/core/utils/forms/validation_messages.dart';
-import 'package:tenant_app/gen/localizations_generated/l10n.dart';
+import 'package:tenant_app/core/l10n/app_localizations.dart';
 
 /// Pumps [child] inside the same shell the app uses: Riverpod, screenutil,
 /// theme, localization (English) and reactive-forms messages.
@@ -26,7 +26,7 @@ extension PumpApp on WidgetTester {
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
             ],
-            supportedLocales: AppLocalizations.delegate.supportedLocales,
+            supportedLocales: AppLocalizations.supportedLocales,
             theme: AppTheme.provideThemeData(context, language: LanguageEnum.english, brightness: Brightness.light),
             themeMode: ThemeMode.light,
             builder: (context, widget) => ReactiveFormConfig(
