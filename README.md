@@ -10,30 +10,23 @@ The project follows **Clean Architecture** with **Riverpod** for state managemen
 
 ## Quick start
 
-**Requirements:** Flutter **3.32+** (Dart 3.8), Xcode (for iOS), Android Studio / SDK (for Android).
+**Requirements:** Flutter **3.29+**, Android Studio with the **Flutter** plugin, and an Android emulator or device. Xcode is needed for iOS.
 
-```bash
-git clone <repo-url> tenant_app && cd tenant_app
-./scripts/project_setup.sh     # creates ios/ & android/, applies platform config, generates code
-flutter run                    # pick an iOS simulator or Android emulator
-```
+1. Unzip / clone the project.
+2. In Android Studio, choose **File → Open** and select the `tenant_app` folder (the one containing `pubspec.yaml`).
+3. Pick an emulator or device and press **▶ Run** on `main.dart`. Android Studio runs `pub get` automatically.
 
-`project_setup.sh` runs `flutter create` for the platform folders, adds the iOS camera/photo permission strings and Arabic localization, adds the Android `INTERNET` permission and `minSdk 24`, and then runs code generation.
+From the command line, the equivalent is `flutter run`. For iOS, `flutter run` on a simulator or open `ios/Runner.xcworkspace`.
+
+There is **no code-generation step**: models, forms, routes and translations are all plain Dart. The `android/` and `ios/` projects are included and already configured:
+- **iOS:** camera/photo permissions and Arabic localization
+- **Android:** `INTERNET` permission and `minSdk 24`
 
 **Demo account** (also shown on the sign-in screen with a one-tap "Use demo account"):
 
 | Email | Phone | Password |
 |---|---|---|
 | `tenant@demo.com` | `0501234567` (or `+971 50 123 4567`) | `Tenant@123` |
-
-### Code generation
-
-Generated files (`*.g.dart`, `*.freezed.dart`, `*.gr.dart`, `*.gform.dart`, `lib/gen/`) are not committed. Regenerate after changing models, routes, forms or translations:
-
-```bash
-./scripts/generate.sh
-# = flutter pub get && dart run intl_utils:generate && dart run build_runner build --delete-conflicting-outputs
-```
 
 ### Tests
 
@@ -91,8 +84,9 @@ lib/
 │   ├── domain/                 # Failure types, ServerErrorCode, BaseRepository, NetworkInfo interface
 │   ├── presentation/
 │   │   ├── providers/          # app-wide state: auth session, app settings (language/theme)
-│   │   ├── routes/             # AppRouter (auto_route) + AuthGuard
+│   │   ├── routes/             # go_router config (auth redirect, tab shell, full-screen pages)
 │   │   └── widgets/            # Base* buttons, fields, date picker, sheets, dialogs, ErrorView, spacers, mixins…
+│   ├── l10n/                   # AppLocalizations + EN/AR translation maps
 │   ├── theme/                  # AppColors (ColorScheme), AppStyles (TextTheme), AppDimens, AppRadius, AppTheme
 │   └── utils/                  # BuildContext/num/DateTime extensions, form validators, media picker
 └── features/
@@ -120,6 +114,10 @@ Each feature is split into **data → domain → presentation**.
 | `@module` / `@preResolve` | `injectable_module.dart` providers / `configureInjection()` + `ProviderScope.overrides` |
 | `BlocListener` / `BlocBuilder(bloc: getIt<…>())` | `ref.listen` / `ref.watch` |
 | `MultiBlocProvider(lazy: false)` | shared `NotifierProvider` + an eager fetch in the dashboard |
+| auto_route + `AuthGuard` + nested tab routes | go_router `redirect` + `StatefulShellRoute.indexedStack` |
+| freezed / json_serializable models | hand-written immutable models (`Equatable`, `fromJson`/`toJson`, `copyWith`) |
+| reactive_forms_generator `*.gform.dart` | hand-written typed form wrappers (`SignInInputForm`, `CreateServiceRequestInputForm`) |
+| intl_utils ARB → generated `AppLocalizations` | `core/l10n/app_localizations.dart` + `translations/intl_en.dart` / `intl_ar.dart` |
 
 Riverpod also replaces GetIt as the DI container, so tests just override providers (`ProviderContainer(overrides: […])`) with Mocktail mocks.
 
@@ -129,7 +127,9 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 
 ### Key packages
 
-`flutter_riverpod`, `auto_route`, `freezed` + `json_serializable`, `dartz`, `reactive_forms` (+ generator), `hive`, `shared_preferences`, `flutter_secure_storage`, `image_picker`, `internet_connection_checker_plus`, `flutter_screenutil`, `intl_utils`, `shimmer`, `mocktail`.
+`flutter_riverpod`, `go_router`, `dartz`, `equatable`, `reactive_forms`, `hive`, `shared_preferences`, `flutter_secure_storage`, `image_picker`, `internet_connection_checker_plus`, `flutter_screenutil`, `shimmer`, `mocktail`.
+
+**Why no code generation?** The reference codebase uses build_runner generators. This project deliberately avoids them so that it opens and runs with no setup step. The generated-style APIs (typed form controls, `fromJson`/`toJson`, `copyWith`, `context.l10n.*`) are kept, just hand-written.
 
 ---
 
