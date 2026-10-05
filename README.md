@@ -52,12 +52,12 @@ Configured in the `flavorizr:` block of `pubspec.yaml`. At runtime `FlavorSettin
 ```bash
 ./scripts/project_setup.sh          # pub get + flutter_flavorizr
 ./scripts/clean_up.sh               # flutter clean + pub get + generate.sh
-./scripts/generate.sh               # build_runner (no generators yet)
+./scripts/generate.sh               # build_runner: freezed, json_serializable, retrofit, reactive_forms_generator
 ./scripts/generate_localizations.sh # intl_utils: lib/l10n/*.arb -> lib/generated
 ./scripts/firebase_setup.sh         # flutterfire per flavor (fill the TODO project names first)
 ```
 
-None of these are needed to run the app. Models, forms, routes and translations are hand-written Dart, so there is no required code-generation step. `build_runner` and `intl_utils` are wired in, matching the reference codebase, so generators can be added later without changing the setup. The `android/` and `ios/` projects are included and already configured:
+None of these are needed to run the app: generated files (`*.freezed.dart`, `*.g.dart`, `*.gform.dart`) are committed. Run `./scripts/generate.sh` after changing a model, API client or form input. The `android/` and `ios/` projects are included and already configured:
 - **iOS:** camera/photo permissions and Arabic localization
 - **Android:** `INTERNET` permission and `minSdk 24`
 
@@ -100,10 +100,11 @@ flutter test
 - **Localization: English and Arabic, with full RTL support.**
   - Directional paddings, alignment and icons
   - Language and theme (light/dark/system) can be switched in Profile and are persisted
-- **Unit and widget tests** (49).
+- **Unit and widget tests** (56).
   - Validators and the request reference number
   - Auth (session restore, logout incl. failure), sign-in, list, create and details notifiers (including cache/offline paths and concurrent refreshes)
-  - Repository (exception → failure mapping, attachment flow and cleanup)
+  - Repository (`DioException` → failure mapping, attachment flow and cleanup)
+  - The network stack end to end: Retrofit clients → Dio → mock backend (sign-in, 422, list, create → details, 404, offline)
   - Sign-in screen, request card, status filter, Home recent requests (list/empty/error) and the confirmation screen
 - **Reusable components:** see `lib/core/presentation/widgets/`.
 - **Git history:** small, scoped commits.
@@ -119,7 +120,7 @@ lib/
 ├── injectable_module.dart      # third-party providers (secure storage, image picker, logger, …)
 ├── src/app.dart                # ScreenUtilInit, MaterialApp.router, theme, l10n, ReactiveFormConfig, auth listener
 ├── core/
-│   ├── data/                   # BaseRepositoryImpl, exceptions, constants, NetworkInfo, MockApiClient, LanguageEnum
+│   ├── data/                   # BaseRepositoryImpl, exceptions, constants, NetworkInfo, BaseResponse, Dio mock backend, LanguageEnum
 │   ├── domain/                 # Failure types, ServerErrorCode, BaseRepository, NetworkInfo interface
 │   ├── presentation/
 │   │   ├── providers/          # app-wide state: auth session, app settings (language/theme)
@@ -154,21 +155,29 @@ Each feature is split into **data → domain → presentation**.
 | `BlocListener` / `BlocBuilder(bloc: getIt<…>())` | `ref.listen` / `ref.watch` |
 | `MultiBlocProvider(lazy: false)` | shared `NotifierProvider` + an eager fetch in the dashboard |
 | auto_route + `AuthGuard` + nested tab routes | go_router `redirect` + `StatefulShellRoute.indexedStack` |
-| freezed / json_serializable models | hand-written immutable models (`Equatable`, `fromJson`/`toJson`, `copyWith`) |
-| reactive_forms_generator `*.gform.dart` | hand-written typed form wrappers (`SignInInputForm`, `CreateServiceRequestInputForm`) |
+| freezed / json_serializable models | same: `@freezed` models, `field_rename: snake` in `build.yaml` |
+| Retrofit `@RestApi` + Dio, `BaseResponse<T>` | same: `XRemoteDataSourceImpl` Retrofit clients returning `BaseResponse<T>` |
+| reactive_forms_generator `*.gform.dart` | same: `@freezed @ReactiveFormAnnotation()` inputs and the generated `XInputFormBuilder` |
 | intl_utils ARB → generated `AppLocalizations` | `core/l10n/app_localizations.dart` + `translations/intl_en.dart` / `intl_ar.dart` |
 
 Riverpod also replaces GetIt as the DI container, so tests just override providers (`ProviderContainer(overrides: […])`) with Mocktail mocks.
 
 ### Mock backend
 
-There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client: it adds latency, checks connectivity, and throws `ServerException` (like `DioException`). The service-requests mock server persists its "database" in shared preferences and seeds a few realistic requests on first launch. Switching to a real backend means replacing only the `*RemoteDataSourceImpl` classes with Retrofit `@RestApi` clients.
+There is no real API, but the app runs the real network stack: Retrofit clients → Dio → `MockBackendInterceptor`. The interceptor adds latency, fails like a dropped connection when offline (`DioExceptionType.connectionError`), round-trips bodies through JSON like a real wire, and routes each request to a per-feature mock server that answers with HTTP status codes and the `BaseResponse` envelope:
+
+| Route | Mock server |
+|---|---|
+| `POST /auth/sign-in` | `AuthMockServer` (demo account; `422` on bad credentials) |
+| `GET /service-requests`, `GET /service-requests/{id}`, `POST /service-requests` | `ServiceRequestsMockServer` (`404` for unknown ids) |
+
+The service-requests mock server persists its "database" in shared preferences and seeds a few realistic requests on first launch. `BaseRepositoryImpl` maps `DioException` to `ServerFailure` by status code, as in the reference codebase. Switching to a real backend means removing the interceptor from `dioProvider`; requests then go to `Configuration.getBaseUrl` for the flavor.
 
 ### Key packages
 
-`flutter_riverpod`, `go_router`, `dartz`, `equatable`, `reactive_forms`, `hive`, `shared_preferences`, `flutter_secure_storage`, `image_picker`, `internet_connection_checker_plus`, `flutter_screenutil`, `shimmer`, `mocktail`.
+`flutter_riverpod`, `go_router`, `dio`, `retrofit`, `freezed`, `json_serializable`, `reactive_forms` + `reactive_forms_generator`, `dartz`, `equatable`, `hive`, `shared_preferences`, `flutter_secure_storage`, `image_picker`, `internet_connection_checker_plus`, `flutter_screenutil`, `shimmer`, `mocktail`.
 
-**Why no code generation?** The reference codebase uses build_runner generators. This project deliberately avoids generated code so that it opens and runs with no setup step. The generated-style APIs (typed form controls, `fromJson`/`toJson`, `copyWith`, `context.l10n.*`) are kept, just hand-written.
+**Code generation.** Models, API clients and form inputs use the same generators as the reference codebase. Generated files are committed so the project opens and runs with no setup step. Generator versions are pinned to a set that compiles together (analyzer 7, as in the reference codebase); see the comments in `pubspec.yaml`. Translations stay hand-written (`core/l10n`).
 
 ---
 
@@ -176,7 +185,7 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 
 - **Photos** are copied from the picker's temp folder into the app documents folder. Only the **file name** is persisted, and the absolute path is resolved at read time, because iOS changes the app container path between installs and updates.
 - **Status progression** is server-driven. With the mock API, new requests stay *Pending*; the seeded requests demonstrate the other states and the timeline.
-- **Models double as entities.** As in the reference codebase, the (hand-written, immutable) data models are used across layers instead of separate domain entities, so domain and presentation import `data/models`. This keeps a small app free of mapping boilerplate. Repository *implementations* stay behind the domain: each `xRepositoryProvider` is declared in `domain/` and bound to its `XRepositoryImpl` in `main()` (`repositoryOverrides` in `injection.dart`), so notifiers never import the data layer's repositories.
+- **Models double as entities.** As in the reference codebase, the (freezed, immutable) data models are used across layers instead of separate domain entities, so domain and presentation import `data/models`. This keeps a small app free of mapping boilerplate. Repository *implementations* stay behind the domain: each `xRepositoryProvider` is declared in `domain/` and bound to its `XRepositoryImpl` in `main()` (`repositoryOverrides` in `injection.dart`), so notifiers never import the data layer's repositories.
 - **Not included (out of scope):** Firebase/Crashlytics (only the setup script), push notifications, and CI.
 
 ---
@@ -186,7 +195,7 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 - **Tools used:** [Claude Code](https://claude.com/claude-code) (Anthropic). Commits it helped with carry a `Co-Authored-By: Claude` trailer.
 - **What it was used for:**
   - Translating my production house style (Ulearna: Clean Architecture, Bloc + GetIt, auto_route, freezed) into the Riverpod + go_router equivalents (see the mapping table above)
-  - Boilerplate: hand-written models with `fromJson`/`toJson`/`copyWith`, sealed notifier states, typed form wrappers
+  - Boilerplate: freezed models, Retrofit data sources, the Dio mock-backend interceptor, generated form inputs, sealed notifier states
   - The Arabic translations and the unit and widget tests
   - Build flavors and setup scripts mirroring the reference project
   - A requirements audit against the assignment brief, the bug fixes that came out of it, and drafting this README
