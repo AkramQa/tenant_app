@@ -10,11 +10,17 @@ part 'service_requests_list_state.dart';
 
 /// App-wide list shared by Home ("recent requests") and the Requests tab —
 /// the counterpart of a `lazy: false` BlocProvider in Ulearna's `app.dart`.
-final serviceRequestsListProvider =
-    NotifierProvider<ServiceRequestsListNotifier, ServiceRequestsListState>(ServiceRequestsListNotifier.new);
+final serviceRequestsListProvider = NotifierProvider<ServiceRequestsListNotifier, ServiceRequestsListState>(
+  ServiceRequestsListNotifier.new,
+);
 
 class ServiceRequestsListNotifier extends Notifier<ServiceRequestsListState> {
   ServiceRequestsRepository get _repository => ref.read(serviceRequestsRepositoryProvider);
+
+  Future<void>? _inFlightFetch;
+
+  /// Created while a fetch was in flight; its (older) response must not drop them.
+  final List<ServiceRequestModel> _createdDuringFetch = [];
 
   @override
   ServiceRequestsListState build() => InitialServiceRequestsList();
@@ -22,14 +28,19 @@ class ServiceRequestsListNotifier extends Notifier<ServiceRequestsListState> {
   /// Cache-then-network: shows the cached list instantly (if any), then
   /// replaces it with fresh data. If the network fails but cached data is on
   /// screen, the data stays and the failure is exposed as [refreshFailure].
-  Future<void> fetchServiceRequests() async {
-    if (state is ServiceRequestsListLoading) return;
+  /// Concurrent callers (Home + Requests pull-to-refresh) share one request.
+  Future<void> fetchServiceRequests() =>
+      _inFlightFetch ??= _fetchServiceRequests().whenComplete(() => _inFlightFetch = null);
+
+  Future<void> _fetchServiceRequests() async {
+    _createdDuringFetch.clear();
 
     if (state is! ServiceRequestsListSuccessful) {
       final cachedResult = await _repository.fetchCachedServiceRequests();
       if (!ref.mounted) return;
       final List<ServiceRequestModel>? cached = cachedResult.fold((_) => null, (requests) => requests);
-      state = cached != null && cached.isNotEmpty
+      state =
+          cached != null && cached.isNotEmpty
           ? ServiceRequestsListSuccessful(cached, isFromCache: true)
           : ServiceRequestsListLoading();
     }
@@ -40,11 +51,16 @@ class ServiceRequestsListNotifier extends Notifier<ServiceRequestsListState> {
     result.fold(
       (failure) {
         final current = state;
-        state = current is ServiceRequestsListSuccessful
+        state =
+            current is ServiceRequestsListSuccessful
             ? ServiceRequestsListSuccessful(current.serviceRequests, isFromCache: true, refreshFailure: failure)
             : ServiceRequestsListFailure(failure);
       },
-      (serviceRequests) {
+      (fetched) {
+        final List<ServiceRequestModel> serviceRequests = [
+          ..._createdDuringFetch.where((created) => fetched.every((request) => request.id != created.id)),
+          ...fetched,
+        ];
         state = ServiceRequestsListSuccessful(serviceRequests);
         unawaited(_repository.cacheServiceRequests(serviceRequests: serviceRequests));
       },
@@ -53,6 +69,7 @@ class ServiceRequestsListNotifier extends Notifier<ServiceRequestsListState> {
 
   /// Inserts a request created on this device at the top of the list.
   void addCreatedServiceRequest(ServiceRequestModel serviceRequest) {
+    if (_inFlightFetch != null) _createdDuringFetch.add(serviceRequest);
     final current = state;
     final List<ServiceRequestModel> serviceRequests = [
       serviceRequest,

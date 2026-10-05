@@ -11,11 +11,7 @@ import 'package:tenant_app/features/service_requests/presentation/widgets/reques
 import 'package:tenant_app/features/service_requests/presentation/widgets/urgent_tag_widget.dart';
 
 class ServiceRequestCardWidget extends StatelessWidget {
-  const ServiceRequestCardWidget({
-    required this.serviceRequest,
-    required this.onTap,
-    super.key,
-  });
+  const ServiceRequestCardWidget({required this.serviceRequest, required this.onTap, super.key});
 
   final ServiceRequestModel serviceRequest;
   final VoidCallback onTap;
@@ -41,13 +37,13 @@ class ServiceRequestCardWidget extends StatelessWidget {
                         serviceType.translated(context),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: context.titleSmall?.copyWith(color: context.colors.cardTitle, fontWeight: FontWeight.w600),
+                        style: context.titleSmall?.copyWith(
+                          color: context.colors.cardTitle,
+                          fontWeight: FontWeight.w600,
                       ),
                     ),
-                    if (serviceRequest.isUrgent) ...[
-                      const SpacerW8(),
-                      const UrgentTagWidget(),
-                    ],
+                    ),
+                    if (serviceRequest.isUrgent) ...[const SpacerW8(), const UrgentTagWidget()],
                   ],
                 ),
                 const SpacerH4(),
@@ -77,7 +73,8 @@ class ServiceRequestCardWidget extends StatelessWidget {
           ),
           const SpacerW8(),
           Icon(
-            context.isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+            // Mirrors itself in RTL (matchTextDirection).
+            Icons.chevron_right_rounded,
             color: context.colors.onSurfaceVariant,
             size: 22.r,
           ),

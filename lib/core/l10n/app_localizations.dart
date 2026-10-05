@@ -49,7 +49,9 @@ class AppLocalizations {
 
   String get demo_account => _t('demo_account');
 
-  String demo_account_details(String email, String phone, String password) => _t('demo_account_details').replaceAll('{email}', email).replaceAll('{phone}', phone).replaceAll('{password}', password);
+  String demo_account_details(String email, String phone, String password) => _t(
+    'demo_account_details',
+  ).replaceAll('{email}', email).replaceAll('{phone}', phone).replaceAll('{password}', password);
 
   String get use_demo_account => _t('use_demo_account');
 
@@ -69,9 +71,11 @@ class AppLocalizations {
 
   String min_length_error_message(int count) => _t('min_length_error_message').replaceAll('{count}', '$count');
 
-  String password_must_be_at_least_n_characters(int count) => _t('password_must_be_at_least_n_characters').replaceAll('{count}', '$count');
+  String password_must_be_at_least_n_characters(int count) =>
+      _t('password_must_be_at_least_n_characters').replaceAll('{count}', '$count');
 
-  String description_must_be_at_least_n_characters(int count) => _t('description_must_be_at_least_n_characters').replaceAll('{count}', '$count');
+  String description_must_be_at_least_n_characters(int count) =>
+      _t('description_must_be_at_least_n_characters').replaceAll('{count}', '$count');
 
   String get please_choose_a_service_type => _t('please_choose_a_service_type');
 
@@ -89,7 +93,8 @@ class AppLocalizations {
 
   String get no_internet_connection => _t('no_internet_connection');
 
-  String get looks_like_you_are_offline_please_check_your_connection_and_try_again => _t('looks_like_you_are_offline_please_check_your_connection_and_try_again');
+  String get looks_like_you_are_offline_please_check_your_connection_and_try_again =>
+      _t('looks_like_you_are_offline_please_check_your_connection_and_try_again');
 
   String get we_couldnt_load_the_data_please_try_again => _t('we_couldnt_load_the_data_please_try_again');
 
@@ -225,6 +230,8 @@ class AppLocalizations {
 
   String get no_photo_attached => _t('no_photo_attached');
 
+  String get could_not_attach_photo => _t('could_not_attach_photo');
+
   String get photo_unavailable => _t('photo_unavailable');
 
   String get contact_information => _t('contact_information');
@@ -248,7 +255,6 @@ class AppLocalizations {
   String get simulate_offline_mode => _t('simulate_offline_mode');
 
   String get simulate_offline_mode_description => _t('simulate_offline_mode_description');
-
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

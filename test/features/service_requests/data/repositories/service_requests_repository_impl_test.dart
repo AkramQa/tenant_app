@@ -45,8 +45,9 @@ void main() {
     });
 
     test('maps an offline ServerException to a noInternetConnection failure', () async {
-      when(() => remote.fetchServiceRequests())
-          .thenThrow(const ServerException(errorCode: ServerErrorCode.noInternetConnection));
+      when(
+        () => remote.fetchServiceRequests(),
+      ).thenThrow(const ServerException(errorCode: ServerErrorCode.noInternetConnection));
 
       final result = await repository.fetchServiceRequests();
 
@@ -87,9 +88,10 @@ void main() {
       ).called(1);
     });
 
-    test('maps a local CacheException to a LogicFailure without calling the API', () async {
-      when(() => local.saveAttachment(sourcePath: any(named: 'sourcePath')))
-          .thenThrow(const CacheException('disk full'));
+    test('maps a local CacheException to a CacheFailure without calling the API', () async {
+      when(
+        () => local.saveAttachment(sourcePath: any(named: 'sourcePath')),
+      ).thenThrow(const CacheException('disk full'));
 
       final result = await repository.createServiceRequest(
         serviceType: ServiceType.cleaning,
@@ -99,7 +101,7 @@ void main() {
         imagePath: '/tmp/picked.jpg',
       );
 
-      expect(result.isLeft(), isTrue);
+      expect(result.fold((failure) => failure, (_) => null), isA<CacheFailure>());
       verifyNever(
         () => remote.createServiceRequest(
           serviceType: any(named: 'serviceType'),
@@ -110,6 +112,31 @@ void main() {
         ),
       );
     });
+  });
+
+  test('createServiceRequest deletes the stored attachment when the API call fails', () async {
+    when(() => local.saveAttachment(sourcePath: '/tmp/picked.jpg')).thenAnswer((_) async => 'stored.jpg');
+    when(() => local.deleteAttachment(fileName: 'stored.jpg')).thenAnswer((_) async {});
+    when(
+      () => remote.createServiceRequest(
+        serviceType: any(named: 'serviceType'),
+        description: any(named: 'description'),
+        preferredDate: any(named: 'preferredDate'),
+        isUrgent: any(named: 'isUrgent'),
+        imageFileName: any(named: 'imageFileName'),
+      ),
+    ).thenThrow(const ServerException(errorCode: ServerErrorCode.noInternetConnection));
+
+    final result = await repository.createServiceRequest(
+      serviceType: ServiceType.plumbing,
+      description: 'Leaking sink',
+      preferredDate: DateTime(2026, 10, 10),
+      isUrgent: false,
+      imagePath: '/tmp/picked.jpg',
+    );
+
+    expect(result, const Left(ServerFailure(errorCode: ServerErrorCode.noInternetConnection)));
+    verify(() => local.deleteAttachment(fileName: 'stored.jpg')).called(1);
   });
 
   test('fetchCachedServiceRequests returns Right(null) when nothing is cached', () async {

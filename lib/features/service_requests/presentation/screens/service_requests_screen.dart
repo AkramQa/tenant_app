@@ -11,6 +11,7 @@ import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/features/service_requests/data/models/request_status.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
+import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_filter/service_requests_filter_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/create_service_request_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_request_details_screen.dart';
@@ -30,8 +31,6 @@ class ServiceRequestsScreen extends ConsumerStatefulWidget {
 }
 
 class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> with ScreenUtils {
-  RequestStatus? _selectedStatus;
-
   @override
   Widget build(BuildContext context) {
     ref.listen<ServiceRequestsListState>(serviceRequestsListProvider, (previous, state) {
@@ -65,15 +64,17 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
   }
 
   Widget _buildList(ServiceRequestsListSuccessful state) {
-    final List<ServiceRequestModel> serviceRequests = _selectedStatus == null
+    final RequestStatus? selectedStatus = ref.watch(serviceRequestsFilterProvider);
+    final List<ServiceRequestModel> serviceRequests =
+        selectedStatus == null
         ? state.serviceRequests
-        : state.serviceRequests.where((request) => request.status == _selectedStatus).toList();
+            : state.serviceRequests.where((request) => request.status == selectedStatus).toList();
 
     return Column(
       children: [
         RequestStatusFilterWidget(
-          selectedStatus: _selectedStatus,
-          onChanged: (status) => setState(() => _selectedStatus = status),
+          selectedStatus: selectedStatus,
+          onChanged: ref.read(serviceRequestsFilterProvider.notifier).select,
         ),
         const SpacerH8(),
         Expanded(
@@ -85,9 +86,7 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
                 if (state.isFromCache)
                   SliverPadding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    sliver: const SliverToBoxAdapter(
-                      child: ResponsiveCenterWidget(child: CachedDataBannerWidget()),
-                    ),
+                    sliver: const SliverToBoxAdapter(child: ResponsiveCenterWidget(child: CachedDataBannerWidget())),
                   ),
                 if (serviceRequests.isEmpty)
                   SliverFillRemaining(
@@ -132,8 +131,12 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
       );
     }
     return BaseEmptyWidget(
-      emptyIcon: BaseIconContainerWidget(icon: Icons.filter_alt_off_outlined, color: context.colors.primary, size: 72.r),
-      title: context.l10n.no_requests_with_status(_selectedStatus!.translated(context)),
+      emptyIcon: BaseIconContainerWidget(
+        icon: Icons.filter_alt_off_outlined,
+        color: context.colors.primary,
+        size: 72.r,
+      ),
+      title: context.l10n.no_requests_with_status(ref.read(serviceRequestsFilterProvider)!.translated(context)),
       description: context.l10n.try_a_different_filter,
     );
   }

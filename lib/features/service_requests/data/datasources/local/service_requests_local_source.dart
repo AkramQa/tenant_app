@@ -19,8 +19,14 @@ abstract class ServiceRequestsLocalDataSource {
   /// in a temp dir the OS may purge) and returns the stored file name.
   Future<String> saveAttachment({required String sourcePath});
 
+  /// Removes a stored attachment; a missing file is not an error.
+  Future<void> deleteAttachment({required String fileName});
+
   /// Absolute path for a stored attachment name.
   String? resolveAttachmentPath(String? fileName);
+
+  /// Drops the cached request list (on logout).
+  Future<void> clearCachedServiceRequests();
 }
 
 /// `@LazySingleton(as: ServiceRequestsLocalDataSource)`
@@ -70,6 +76,15 @@ class ServiceRequestsLocalDataSourceImpl implements ServiceRequestsLocalDataSour
       throw CacheException('Could not store attachment: ${e.message}');
     }
   }
+
+  @override
+  Future<void> deleteAttachment({required String fileName}) async {
+    final File file = File(p.join(documentsDirectory.path, kAttachmentsFolder, fileName));
+    if (file.existsSync()) await file.delete();
+  }
+
+  @override
+  Future<void> clearCachedServiceRequests() => cacheBox.delete(HiveKeys.kServiceRequests);
 
   @override
   String? resolveAttachmentPath(String? fileName) =>

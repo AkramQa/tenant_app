@@ -27,6 +27,10 @@ class BaseRepositoryImpl implements BaseRepository {
         _logger.w(e.toString());
         return left(ServerFailure(errorCode: e.errorCode, message: e.message));
       }
+      if (e is CacheException) {
+        _logger.w(e.toString());
+        return left(CacheFailure());
+      }
       if (e is TimeoutException) {
         _logger.w(e.toString());
         return left(const ServerFailure(errorCode: ServerErrorCode.noInternetConnection));

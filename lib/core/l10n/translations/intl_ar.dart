@@ -32,7 +32,8 @@ const Map<String, String> intlAr = {
   'cacheErrorMessage': 'تعذّرت قراءة بياناتك المحفوظة.',
   'something_went_wrong': 'حدث خطأ ما',
   'no_internet_connection': 'لا يوجد اتصال بالإنترنت',
-  'looks_like_you_are_offline_please_check_your_connection_and_try_again': 'يبدو أنك غير متصل. يرجى التحقق من الاتصال والمحاولة مرة أخرى.',
+  'looks_like_you_are_offline_please_check_your_connection_and_try_again':
+      'يبدو أنك غير متصل. يرجى التحقق من الاتصال والمحاولة مرة أخرى.',
   'we_couldnt_load_the_data_please_try_again': 'تعذّر تحميل البيانات. يرجى المحاولة مرة أخرى.',
   'the_requested_item_was_not_found': 'لم نتمكن من العثور على هذا الطلب. ربما تمت إزالته.',
   'could_not_access_photos': 'تعذّر الوصول إلى الكاميرا أو الصور. تحقق من أذونات التطبيق في الإعدادات.',
@@ -100,6 +101,7 @@ const Map<String, String> intlAr = {
   'status': 'الحالة',
   'attached_photo': 'الصورة المرفقة',
   'no_photo_attached': 'لا توجد صورة مرفقة.',
+  'could_not_attach_photo': 'تعذّر إرفاق الصورة. يرجى اختيارها مرة أخرى.',
   'photo_unavailable': 'الصورة غير متاحة',
   'contact_information': 'معلومات التواصل',
   'email': 'البريد الإلكتروني',

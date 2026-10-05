@@ -18,7 +18,9 @@ class AttachmentPreviewWidget extends StatelessWidget {
       label: context.l10n.attached_photo,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.ml),
-        onTap: () => _openFullScreen(context),
+        onTap: () {
+          if (File(imagePath).existsSync()) _openFullScreen(context);
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppRadius.ml),
           child: Image.file(
@@ -48,7 +50,15 @@ class AttachmentPreviewWidget extends StatelessWidget {
             Positioned.fill(
               child: InteractiveViewer(
                 maxScale: 4,
-                child: Center(child: Image.file(File(imagePath))),
+                child: Center(
+                  child: Image.file(
+                    File(imagePath),
+                    errorBuilder: (_, __, ___) => Text(
+                      dialogContext.l10n.photo_unavailable,
+                      style: dialogContext.bodyMedium?.copyWith(color: dialogContext.colors.white),
+                    ),
+                  ),
+                ),
               ),
             ),
             SafeArea(

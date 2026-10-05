@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart' hide ReactiveSwitchListTile;
 import 'package:tenant_app/core/data/utils/constants.dart';
+import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/presentation/widgets/base_card_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/base_icon_container_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/buttons/base_elevated_button.dart';
@@ -19,6 +20,7 @@ import 'package:tenant_app/core/utils/ext/date_time_ext.dart';
 import 'package:tenant_app/core/utils/media_picker_utils.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/create_service_request/create_service_request_notifier.dart';
+import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_filter/service_requests_filter_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/ui-models/create_service_request_input.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_image_attachment_field.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
@@ -39,8 +41,9 @@ class CreateServiceRequestScreen extends ConsumerStatefulWidget {
 
 class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceRequestScreen>
     with ScreenLoader, ScreenUtils {
-  late final DateTime _firstDate = DateTime.now().dateOnly;
-  late final DateTime _lastDate = _firstDate.add(const Duration(days: kPreferredDateMaxDaysAhead));
+  // Getters, not fields: a form left open past midnight must not allow yesterday.
+  DateTime get _firstDate => DateTime.now().dateOnly;
+  DateTime get _lastDate => _firstDate.add(const Duration(days: kPreferredDateMaxDaysAhead));
 
   @override
   Widget screen(BuildContext context) {
@@ -50,10 +53,14 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
           startLoading();
         case CreateServiceRequestFailure(:final failure):
           stopLoading();
-          handleError(failure: failure);
+          handleError(
+            failure: failure,
+            customMessage: failure is CacheFailure ? context.l10n.could_not_attach_photo : null,
+          );
         case CreateServiceRequestSuccessful():
           stopLoading();
           showSuccess(customMessage: context.l10n.request_submitted_successfully);
+          ref.read(serviceRequestsFilterProvider.notifier).clear();
           // Land on the Requests tab so the tenant sees the new request.
           context.go(ServiceRequestsScreen.routePath);
         case CreateServiceRequestInitial():

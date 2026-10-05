@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart' show Either;
+import 'package:dartz/dartz.dart' show Either, Unit;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
@@ -28,4 +28,7 @@ abstract class ServiceRequestsRepository {
   /// Last list successfully loaded from the server (offline support);
   /// `Right(null)` when nothing is cached yet.
   Future<Either<Failure, List<ServiceRequestModel>?>> fetchCachedServiceRequests();
+
+  /// Drops the cached list so the next account never sees it offline.
+  Future<Either<Failure, Unit>> clearCachedServiceRequests();
 }

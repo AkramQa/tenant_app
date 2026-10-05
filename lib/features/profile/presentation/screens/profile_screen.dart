@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tenant_app/core/data/models/enum/languages_enum.dart';
 import 'package:tenant_app/core/data/utils/network/network_info.dart';
+import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/presentation/providers/app_settings/app_settings_notifier.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
 import 'package:tenant_app/core/presentation/widgets/base_card_widget.dart';
@@ -11,6 +12,7 @@ import 'package:tenant_app/core/presentation/widgets/base_sheet/base_sheet_optio
 import 'package:tenant_app/core/presentation/widgets/base_sheet/options_base_sheet.dart';
 import 'package:tenant_app/core/presentation/widgets/loader.dart';
 import 'package:tenant_app/core/presentation/widgets/responsive_center_widget.dart';
+import 'package:tenant_app/core/presentation/widgets/screen_utils.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/presentation/widgets/title_view_all.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
@@ -18,13 +20,18 @@ import 'package:tenant_app/features/auth/presentation/dialogs/logout_confirmatio
 import 'package:tenant_app/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:tenant_app/features/profile/presentation/widgets/setting_list_tile_item_widget.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   static const String routePath = '/profile';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> with ScreenUtils {
+  @override
+  Widget build(BuildContext context) {
     final tenant = ref.watch(authProvider.select((state) => state is Authenticated ? state.user : null));
     final settings = ref.watch(appSettingsProvider);
     final bool isOfflineSimulated = ref.watch(simulateOfflineProvider);
@@ -171,6 +178,7 @@ class ProfileScreen extends ConsumerWidget {
     final bool confirmed = await LogoutConfirmationDialog.show(context: context);
     if (!confirmed) return;
     // `App` listens to the auth state and routes back to sign-in.
-    await ref.read(authProvider.notifier).logout();
+    final Failure? failure = await ref.read(authProvider.notifier).logout();
+    if (failure != null && mounted) handleError(failure: failure);
   }
 }

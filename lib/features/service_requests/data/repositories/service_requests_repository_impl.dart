@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart' show Either, right;
+import 'package:dartz/dartz.dart' show Either, Unit, right, unit;
 import 'package:logger/logger.dart';
 import 'package:tenant_app/core/data/repositories/base_repository_impl.dart';
 import 'package:tenant_app/core/data/utils/network/network_info.dart';
@@ -55,6 +55,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
     return request(() async {
       // Real backend: this would be a multipart upload returning a URL/id.
       final String? imageFileName = imagePath == null ? null : await local.saveAttachment(sourcePath: imagePath);
+      try {
       final response = await remote.createServiceRequest(
         serviceType: serviceType,
         description: description,
@@ -63,6 +64,11 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
         imageFileName: imageFileName,
       );
       return right(_withLocalImagePath(response));
+      } catch (_) {
+        // Nothing references the copy if the request was not created.
+        if (imageFileName != null) await local.deleteAttachment(fileName: imageFileName);
+        rethrow;
+      }
     });
   }
 
@@ -78,6 +84,14 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
     return localRequest(() async {
       final cached = await local.fetchCachedServiceRequests();
       return right(cached == null ? null : _sortedNewestFirst(cached.map(_withLocalImagePath).toList()));
+    });
+  }
+
+  @override
+  Future<Either<Failure, Unit>> clearCachedServiceRequests() {
+    return localRequest(() async {
+      await local.clearCachedServiceRequests();
+      return right(unit);
     });
   }
 

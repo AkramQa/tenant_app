@@ -26,9 +26,14 @@ class AuthNotifier extends Notifier<AuthState> {
 
   void setAuthenticated(TenantInfoModel tenant) => state = Authenticated(user: tenant);
 
-  Future<void> logout() async {
+  /// Returns the failure and keeps the session when the stored credentials
+  /// could not be cleared, so the tenant is never half signed out.
+  Future<Failure?> logout() async {
     final result = await _repository.clearCache();
-    state = result.fold<AuthState>((failure) => AuthFailure(failure), (_) => Unauthenticated());
+    return result.fold((failure) => failure, (_) {
+      state = Unauthenticated();
+      return null;
+    });
   }
 
   bool get isUserAuthenticated => state is Authenticated;

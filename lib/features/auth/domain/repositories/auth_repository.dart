@@ -10,7 +10,10 @@ final authRepositoryProvider = Provider<AuthRepository>(
 );
 
 abstract class AuthRepository {
-  Future<Either<Failure, SignInResponseModel>> signIn({required String identifier, required String password});
+  Future<Either<Failure, SignInResponseModel>> signIn({
+    required String identifier,
+    required String password,
+  });
 
   /// Restores a persisted session; `Right(null)` when signed out.
   Future<Either<Failure, TenantInfoModel?>> getSignedInUserInfo();

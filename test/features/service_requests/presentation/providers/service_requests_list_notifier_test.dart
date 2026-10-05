@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart' show Either, Left, Right;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,8 +24,9 @@ void main() {
 
   setUp(() {
     repository = MockServiceRequestsRepository();
-    when(() => repository.cacheServiceRequests(serviceRequests: any(named: 'serviceRequests')))
-        .thenAnswer((_) async => const Right(true));
+    when(
+      () => repository.cacheServiceRequests(serviceRequests: any(named: 'serviceRequests')),
+    ).thenAnswer((_) async => const Right(true));
     container = ProviderContainer(overrides: [serviceRequestsRepositoryProvider.overrideWithValue(repository)]);
     states = [];
     container.listen<ServiceRequestsListState>(serviceRequestsListProvider, (_, state) => states.add(state));
@@ -99,5 +102,31 @@ void main() {
 
     final last = states.last as ServiceRequestsListSuccessful;
     expect(last.serviceRequests.map((request) => request.id), ['new', 'existing']);
+  });
+
+  group('ServiceRequestsListNotifier — concurrency', () {
+    test('concurrent fetches share one network request', () async {
+      arrangeCache(null);
+      arrangeRemote(Right([fakeServiceRequestModel()]));
+
+      await Future.wait([notifier().fetchServiceRequests(), notifier().fetchServiceRequests()]);
+
+      verify(() => repository.fetchServiceRequests()).called(1);
+    });
+
+    test('a request created during a fetch survives the older response', () async {
+      final completer = Completer<Either<Failure, List<ServiceRequestModel>>>();
+      arrangeCache(null);
+      when(() => repository.fetchServiceRequests()).thenAnswer((_) => completer.future);
+
+      final fetch = notifier().fetchServiceRequests();
+      await Future<void>.delayed(Duration.zero);
+      notifier().addCreatedServiceRequest(fakeServiceRequestModel(id: 'created'));
+      completer.complete(Right([fakeServiceRequestModel(id: 'old')]));
+      await fetch;
+
+      final success = container.read(serviceRequestsListProvider) as ServiceRequestsListSuccessful;
+      expect(success.serviceRequests.map((request) => request.id), ['created', 'old']);
+    });
   });
 }

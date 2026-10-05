@@ -32,7 +32,8 @@ const Map<String, String> intlEn = {
   'cacheErrorMessage': 'We couldn\'t read your saved data.',
   'something_went_wrong': 'Something went wrong',
   'no_internet_connection': 'No internet connection',
-  'looks_like_you_are_offline_please_check_your_connection_and_try_again': 'Looks like you\'re offline. Please check your connection and try again.',
+  'looks_like_you_are_offline_please_check_your_connection_and_try_again':
+      'Looks like you\'re offline. Please check your connection and try again.',
   'we_couldnt_load_the_data_please_try_again': 'We couldn\'t load the data. Please try again.',
   'the_requested_item_was_not_found': 'We couldn\'t find this request. It may have been removed.',
   'could_not_access_photos': 'Couldn\'t access the camera or photos. Check the app permissions in Settings.',
@@ -100,6 +101,7 @@ const Map<String, String> intlEn = {
   'status': 'Status',
   'attached_photo': 'Attached photo',
   'no_photo_attached': 'No photo attached.',
+  'could_not_attach_photo': 'We couldn\'t attach that photo. Please choose it again.',
   'photo_unavailable': 'Photo unavailable',
   'contact_information': 'Contact information',
   'email': 'Email',
@@ -111,5 +113,6 @@ const Map<String, String> intlEn = {
   'light': 'Light',
   'dark': 'Dark',
   'simulate_offline_mode': 'Simulate offline mode',
-  'simulate_offline_mode_description': 'Developer option: API calls fail with a connection error so you can see offline handling.',
+  'simulate_offline_mode_description':
+      'Developer option: API calls fail with a connection error so you can see offline handling.',
 };
