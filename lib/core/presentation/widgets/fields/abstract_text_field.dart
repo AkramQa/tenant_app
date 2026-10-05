@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:separated_column/separated_column.dart';
 import 'package:tenant_app/core/presentation/widgets/fields/obscure_toggle_text.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
@@ -57,7 +58,7 @@ abstract class AbstractTextField extends StatelessWidget {
     }
 
     return SeparatedColumn(
-      separatorBuilder: (_, __) => SizedBox(height: 8.0.h),
+      separatorBuilder: (_, __) => const SpacerH8(),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) Text(label!, style: context.titleSmall?.copyWith(color: context.colors.cardTitle)),

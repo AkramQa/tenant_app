@@ -90,7 +90,14 @@ class _InfoPill extends StatelessWidget {
         children: [
           Icon(icon, size: 16.r, color: onCard),
           const SpacerW4(),
-          Flexible(child: Text(text, style: context.labelMedium?.copyWith(color: onCard))),
+          Flexible(
+            child: Text(
+              text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.labelMedium?.copyWith(color: onCard),
+            ),
+          ),
         ],
       ),
     );

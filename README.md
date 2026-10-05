@@ -70,7 +70,7 @@ Generated files are committed, so none of these are needed to run the app.
 - **Arabic + RTL**, and **light/dark theme**, switchable in Profile.
 - **Platform-aware UI:** native iOS date picker, dialogs and swipe-back.
 - **Responsive:** bottom navigation on phones, a navigation rail on tablets and in landscape.
-- **56 unit and widget tests**, covering notifiers, the repository, the network layer and key widgets.
+- **57 unit and widget tests**, covering notifiers, the repository, the network layer and key widgets.
 
 ---
 

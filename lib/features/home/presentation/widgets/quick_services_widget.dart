@@ -36,7 +36,7 @@ class QuickServicesWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     for (int column = 0; column < rows[index].length; column++) ...[
-                      if (column > 0) SizedBox(width: 12.w),
+                      if (column > 0) const SpacerW12(),
                       Expanded(child: _QuickServiceTile(serviceType: rows[index][column], onTap: onServiceSelected)),
                     ],
                   ],
@@ -58,11 +58,14 @@ class _QuickServiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseCardWidget(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+    return Semantics(
+      button: true,
+      label: serviceType.translated(context),
       onTap: () => onTap(serviceType),
-      child: Semantics(
-        button: true,
+      excludeSemantics: true,
+      child: BaseCardWidget(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+        onTap: () => onTap(serviceType),
         child: Column(
           // Top-aligned so icons line up across tiles whatever the label length.
           mainAxisAlignment: MainAxisAlignment.start,

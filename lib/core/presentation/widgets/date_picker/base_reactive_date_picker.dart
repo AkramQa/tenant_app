@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:separated_column/separated_column.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tenant_app/core/presentation/widgets/date_picker/adaptive_date_picker.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/core/utils/ext/date_time_ext.dart';
@@ -48,7 +48,7 @@ class BaseReactiveDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SeparatedColumn(
-      separatorBuilder: (_, __) => SizedBox(height: 8.0.h),
+      separatorBuilder: (_, __) => const SpacerH8(),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) Text(label!, style: context.titleSmall?.copyWith(color: context.colors.cardTitle)),

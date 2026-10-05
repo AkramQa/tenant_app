@@ -38,4 +38,26 @@ void main() {
 
     expect(find.text('Urgent'), findsNothing);
   });
+
+  testWidgets('announces the request as one labelled button', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpApp(
+      Scaffold(
+        body: ServiceRequestCardWidget(
+          serviceRequest: fakeServiceRequestModel(status: RequestStatus.pending, isUrgent: true),
+          onTap: () {},
+        ),
+      ),
+    );
+
+    expect(
+      tester.getSemantics(find.byType(ServiceRequestCardWidget)),
+      matchesSemantics(
+        label: 'Plumbing, Pending, Urgent, Requested Oct 1, 2026',
+        isButton: true,
+        hasTapAction: true,
+      ),
+    );
+    semantics.dispose();
+  });
 }

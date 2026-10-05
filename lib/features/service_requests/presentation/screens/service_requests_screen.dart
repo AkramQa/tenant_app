@@ -48,7 +48,8 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
         heroTag: 'service_requests_fab',
         onPressed: () => context.push(CreateServiceRequestScreen.routePath),
         isExtended: isFabExtended,
-        tooltip: context.l10n.new_request,
+        // Only the collapsed (icon-only) FAB needs a tooltip; the extended one shows the label.
+        tooltip: isFabExtended ? null : context.l10n.new_request,
         icon: const Icon(Icons.add_rounded),
         label: Text(context.l10n.new_request),
       ),

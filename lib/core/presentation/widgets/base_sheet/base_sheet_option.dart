@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
@@ -68,7 +69,7 @@ class BaseSheetOption extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 Icon(icon, color: color, size: 22.r),
-                SizedBox(width: 12.w),
+                const SpacerW12(),
               ],
               Expanded(child: Text(text, style: context.bodyLarge?.copyWith(color: color))),
               if (baseSheetType.isSelectedOption && selected)

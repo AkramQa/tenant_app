@@ -19,66 +19,77 @@ class ServiceRequestCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serviceType = serviceRequest.serviceType;
-    return BaseCardWidget(
+    final String semanticsLabel = [
+      serviceType.translated(context),
+      serviceRequest.status.translated(context),
+      if (serviceRequest.isUrgent) context.l10n.urgent,
+      context.l10n.requested_on(serviceRequest.createdAt.toDisplayDate(context)),
+    ].join(', ');
+    return Semantics(
+      button: true,
+      label: semanticsLabel,
       onTap: onTap,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BaseIconContainerWidget(icon: serviceType.icon, color: serviceType.color(context)),
-          const SpacerW12(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        serviceType.translated(context),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.titleSmall?.copyWith(
-                          color: context.colors.cardTitle,
-                          fontWeight: FontWeight.w600,
+      excludeSemantics: true,
+      child: BaseCardWidget(
+        onTap: onTap,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BaseIconContainerWidget(icon: serviceType.icon, color: serviceType.color(context)),
+            const SpacerW12(),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          serviceType.translated(context),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.titleSmall?.copyWith(
+                            color: context.colors.cardTitle,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
-                    ),
-                    if (serviceRequest.isUrgent) ...[const SpacerW8(), const UrgentTagWidget()],
-                  ],
-                ),
-                const SpacerH4(),
-                Text(
-                  serviceRequest.description,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.bodySmall?.copyWith(color: context.colors.cardSubTitle),
-                ),
-                const SpacerH8(),
-                Row(
-                  children: [
-                    RequestStatusTagWidget(status: serviceRequest.status),
-                    const SpacerW8(),
-                    Flexible(
-                      child: Text(
+                      if (serviceRequest.isUrgent) ...[const SpacerW8(), const UrgentTagWidget()],
+                    ],
+                  ),
+                  const SpacerH4(),
+                  Text(
+                    serviceRequest.description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.bodySmall?.copyWith(color: context.colors.cardSubTitle),
+                  ),
+                  const SpacerH8(),
+                  // Wrap, not Row: with large text the date moves under the tag instead of being cut.
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 4.h,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      RequestStatusTagWidget(status: serviceRequest.status),
+                      Text(
                         context.l10n.requested_on(serviceRequest.createdAt.toDisplayDate(context)),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                         style: context.labelSmall?.copyWith(color: context.colors.onSurfaceVariant),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SpacerW8(),
-          Icon(
-            // Mirrors itself in RTL (matchTextDirection).
-            Icons.chevron_right_rounded,
-            color: context.colors.onSurfaceVariant,
-            size: 22.r,
-          ),
-        ],
+            const SpacerW8(),
+            Icon(
+              // Mirrors itself in RTL (matchTextDirection).
+              Icons.chevron_right_rounded,
+              color: context.colors.onSurfaceVariant,
+              size: 22.r,
+            ),
+          ],
+        ),
       ),
     );
   }

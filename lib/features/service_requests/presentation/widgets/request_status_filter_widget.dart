@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/features/service_requests/data/models/request_status.dart';
 import 'package:tenant_app/features/service_requests/presentation/utils/service_request_ui_utils.dart';
@@ -22,27 +23,33 @@ class RequestStatusFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<RequestStatus?> options = [null, ...RequestStatus.getValues()];
-    return SizedBox(
-      height: 40.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: options.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8.w),
-        itemBuilder: (context, index) {
-          final RequestStatus? status = options[index];
-          final bool isSelected = status == selectedStatus;
-          return ChoiceChip(
-            label: Text(_label(context, status)),
-            selected: isSelected,
-            onSelected: (_) => onChanged(status),
-            labelStyle: context.labelMedium?.copyWith(
-              color: isSelected ? context.colors.primary : context.colors.cardSubTitle,
-            ),
-            side: BorderSide(color: isSelected ? context.colors.primary : context.colors.borderColor),
-          );
-        },
+    // Sized by its chips (no fixed height) so large text never clips and
+    // each chip keeps its 48dp tap target.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Row(
+        children: [
+          for (final RequestStatus? status in options) ...[
+            if (status != options.first) const SpacerW8(),
+            _buildChip(context, status),
+          ],
+        ],
       ),
+    );
+  }
+
+  Widget _buildChip(BuildContext context, RequestStatus? status) {
+    final bool isSelected = status == selectedStatus;
+    return ChoiceChip(
+      label: Text(_label(context, status)),
+      selected: isSelected,
+      onSelected: (_) => onChanged(status),
+      materialTapTargetSize: MaterialTapTargetSize.padded,
+      labelStyle: context.labelMedium?.copyWith(
+        color: isSelected ? context.colors.primary : context.colors.cardSubTitle,
+      ),
+      side: BorderSide(color: isSelected ? context.colors.primary : context.colors.borderColor),
     );
   }
 

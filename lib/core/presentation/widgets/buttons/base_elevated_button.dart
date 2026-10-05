@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:separated_row/separated_row.dart';
 import 'package:tenant_app/core/presentation/widgets/buttons/loadable_widget.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
@@ -152,7 +153,7 @@ class BaseElevatedButton extends StatelessWidget {
       buttonChild = child!;
     } else if (icon != null) {
       buttonChild = SeparatedRow(
-        separatorBuilder: (_, __) => SizedBox(width: 8.0.w),
+        separatorBuilder: (_, __) => const SpacerW8(),
         mainAxisSize: MainAxisSize.min,
         children: [
           icon!,

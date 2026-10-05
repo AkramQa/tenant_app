@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
@@ -44,12 +45,12 @@ class BaseSheet<T> extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 12.h),
+            const SpacerH12(),
             const SheetNotch(),
-            SizedBox(height: 16.h),
+            const SpacerH16(),
             if (title != null) ...[
               Text(title!, style: context.titleMedium?.copyWith(color: context.colors.cardTitle)),
-              SizedBox(height: 8.h),
+              const SpacerH8(),
             ],
             Flexible(
               child: SingleChildScrollView(

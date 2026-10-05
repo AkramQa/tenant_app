@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 
 class BaseRowKeyValueWidget extends StatelessWidget {
@@ -21,10 +22,13 @@ class BaseRowKeyValueWidget extends StatelessWidget {
       children: [
         if (icon != null) ...[
           Icon(icon, size: 18.r, color: context.colors.onSurfaceVariant),
-          SizedBox(width: 8.w),
+          const SpacerW8(),
         ],
-        Text(keyAsString, style: context.bodyMedium?.copyWith(color: context.colors.cardSubTitle)),
-        SizedBox(width: 16.w),
+        // Flexible so a long (e.g. Arabic) key wraps instead of overflowing the row.
+        Flexible(
+          child: Text(keyAsString, style: context.bodyMedium?.copyWith(color: context.colors.cardSubTitle)),
+        ),
+        const SpacerW16(),
         Expanded(
           child: Text(
             value ?? '',
