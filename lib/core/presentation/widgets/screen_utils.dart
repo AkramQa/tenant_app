@@ -25,21 +25,21 @@ mixin ScreenUtils<T extends StatefulWidget> on State<T> {
     String? customMessage,
     Map<ServerErrorCode, String>? customMessages,
   }) {
-    String message = customMessage ?? context.l10n.errorMessage;
+    String message = customMessage ?? context.l10n.error_message;
     if (failure != null && failure is ServerFailure) {
       if (customMessages != null && customMessages.containsKey(failure.errorCode)) {
         message = customMessages[failure.errorCode]!;
       } else if (failure.errorCode == ServerErrorCode.noInternetConnection) {
-        message = context.l10n.noInternetConnectionMessage;
+        message = context.l10n.no_internet_connection_message;
       } else if (failure.errorCode == ServerErrorCode.serverError) {
-        message = failure.message.isNotEmpty ? failure.message : context.l10n.serverNotWorking;
+        message = failure.message.isNotEmpty ? failure.message : context.l10n.server_not_working;
       } else if (failure.message.isNotEmpty) {
         message = failure.message;
       }
     } else if (failure != null && failure is LogicFailure && customMessage == null) {
-      message = context.l10n.errorMessage;
+      message = context.l10n.error_message;
     } else if (failure != null && failure is CacheFailure && customMessage == null) {
-      message = context.l10n.cacheErrorMessage;
+      message = context.l10n.cache_error_message;
     }
 
     final messenger = ScaffoldMessenger.of(scaffoldContext ?? context)..hideCurrentSnackBar();

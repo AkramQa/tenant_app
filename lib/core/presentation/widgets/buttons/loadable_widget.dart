@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tenant_app/core/presentation/widgets/buttons/loader.dart';
+import 'package:tenant_app/core/presentation/widgets/buttons/button_loader.dart';
 
 class LoadableWidget extends StatelessWidget {
   const LoadableWidget({
@@ -23,7 +23,7 @@ class LoadableWidget extends StatelessWidget {
         isLoading
             ? Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.0.r),
-                child: Loader(size: 14.0.r, color: loaderColor),
+                child: ButtonLoader(size: 14.0.r, color: loaderColor),
               )
             : Flexible(child: child),
       ],

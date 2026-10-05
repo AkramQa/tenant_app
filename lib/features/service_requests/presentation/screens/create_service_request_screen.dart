@@ -21,7 +21,7 @@ import 'package:tenant_app/core/utils/media_picker_utils.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/create_service_request/create_service_request_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_filter/service_requests_filter_notifier.dart';
-import 'package:tenant_app/features/service_requests/presentation/ui-models/create_service_request_input.dart';
+import 'package:tenant_app/features/service_requests/presentation/ui_models/create_service_request_input.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_image_attachment_field.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_request_submitted_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';

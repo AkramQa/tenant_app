@@ -38,32 +38,11 @@ class SpacerH8 extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(height: context.theme.dimensions.spacing8.hMax);
 }
 
-class SpacerH6 extends StatelessWidget {
-  const SpacerH6({super.key});
-
-  @override
-  Widget build(BuildContext context) => SizedBox(height: 6.hMax);
-}
-
 class SpacerH4 extends StatelessWidget {
   const SpacerH4({super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(height: context.theme.dimensions.spacing4.hMax);
-}
-
-class SpacerW32 extends StatelessWidget {
-  const SpacerW32({super.key});
-
-  @override
-  Widget build(BuildContext context) => SizedBox(width: context.theme.dimensions.spacing32.wMax);
-}
-
-class SpacerW24 extends StatelessWidget {
-  const SpacerW24({super.key});
-
-  @override
-  Widget build(BuildContext context) => SizedBox(width: context.theme.dimensions.spacing24.wMax);
 }
 
 class SpacerW16 extends StatelessWidget {

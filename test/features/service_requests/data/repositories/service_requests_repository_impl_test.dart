@@ -30,7 +30,7 @@ void main() {
   setUp(() {
     remote = MockServiceRequestsRemoteDataSource();
     local = MockServiceRequestsLocalDataSource();
-    repository = ServiceRequestsRepositoryImpl(remote, local, MockNetworkInfo(), Logger(level: Level.off));
+    repository = ServiceRequestsRepositoryImpl(remote, local, Logger(level: Level.off));
     when(() => local.resolveAttachmentPath(any())).thenAnswer((invocation) {
       final fileName = invocation.positionalArguments.first as String?;
       return fileName == null ? null : '/documents/attachments/$fileName';

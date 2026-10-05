@@ -81,13 +81,13 @@ class AppLocalizations {
 
   String get please_choose_a_preferred_date => _t('please_choose_a_preferred_date');
 
-  String get errorMessage => _t('errorMessage');
+  String get error_message => _t('error_message');
 
-  String get noInternetConnectionMessage => _t('noInternetConnectionMessage');
+  String get no_internet_connection_message => _t('no_internet_connection_message');
 
-  String get serverNotWorking => _t('serverNotWorking');
+  String get server_not_working => _t('server_not_working');
 
-  String get cacheErrorMessage => _t('cacheErrorMessage');
+  String get cache_error_message => _t('cache_error_message');
 
   String get something_went_wrong => _t('something_went_wrong');
 
@@ -213,8 +213,6 @@ class AppLocalizations {
   String get remove_photo => _t('remove_photo');
 
   String get submit_request => _t('submit_request');
-
-  String get request_submitted_successfully => _t('request_submitted_successfully');
 
   String get request_details => _t('request_details');
 

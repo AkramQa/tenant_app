@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:separated_row/separated_row.dart';
 import 'package:tenant_app/core/presentation/widgets/buttons/loadable_widget.dart';
-import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
+import 'package:tenant_app/core/utils/ext/screen_utils_ext.dart';
 
 class BaseElevatedButton extends StatelessWidget {
   const BaseElevatedButton({
@@ -152,8 +151,8 @@ class BaseElevatedButton extends StatelessWidget {
     if (child != null) {
       buttonChild = child!;
     } else if (icon != null) {
-      buttonChild = SeparatedRow(
-        separatorBuilder: (_, __) => const SpacerW8(),
+      buttonChild = Row(
+        spacing: context.dimens.spacing8.wMax,
         mainAxisSize: MainAxisSize.min,
         children: [
           icon!,

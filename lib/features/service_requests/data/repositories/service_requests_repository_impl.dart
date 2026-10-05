@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart' show Either, Unit, right, unit;
 import 'package:logger/logger.dart';
 import 'package:tenant_app/core/data/repositories/base_repository_impl.dart';
-import 'package:tenant_app/core/data/utils/network/network_info.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
-import 'package:tenant_app/core/domain/utils/network/network_info.dart';
 import 'package:tenant_app/features/service_requests/data/datasources/local/service_requests_local_source.dart';
 import 'package:tenant_app/features/service_requests/data/datasources/remote/service_requests_remote_datasource.dart';
 import 'package:tenant_app/features/service_requests/data/models/create_service_request_body_model.dart';
@@ -16,7 +14,6 @@ final serviceRequestsRepositoryOverride = serviceRequestsRepositoryProvider.over
   (ref) => ServiceRequestsRepositoryImpl(
     ref.watch(serviceRequestsRemoteDataSourceProvider),
     ref.watch(serviceRequestsLocalDataSourceProvider),
-    ref.watch(networkInfoProvider),
     ref.watch(loggerProvider),
   ),
 );
@@ -25,8 +22,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   final ServiceRequestsRemoteDataSource remote;
   final ServiceRequestsLocalDataSource local;
 
-  ServiceRequestsRepositoryImpl(this.remote, this.local, NetworkInfo networkInfo, Logger logger)
-      : super(networkInfo, logger);
+  ServiceRequestsRepositoryImpl(this.remote, this.local, Logger logger) : super(logger);
 
   @override
   Future<Either<Failure, List<ServiceRequestModel>>> fetchServiceRequests() {

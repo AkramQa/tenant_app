@@ -65,8 +65,8 @@ void main() {
     });
 
     test('keeps the session and returns the failure when clearing fails', () async {
-      final cacheFailure = CacheFailure();
-      when(() => authRepository.clearCache()).thenAnswer((_) async => Left(cacheFailure));
+      const cacheFailure = CacheFailure();
+      when(() => authRepository.clearCache()).thenAnswer((_) async => const Left(cacheFailure));
 
       final failure = await notifier().logout();
 

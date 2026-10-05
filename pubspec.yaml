@@ -38,7 +38,6 @@ dependencies:
   json_annotation: ^4.9.0
   hive: ^2.2.3
   uuid: ^4.5.1
-  equatable: ^2.0.7
   intl: any
   dartz: ^0.10.1
   logger: ^2.5.0
@@ -50,9 +49,6 @@ dependencies:
   # UI
   flutter_screenutil: ^5.9.3
   cupertino_icons: ^1.0.8
-  flutter_spinkit: ^5.2.1
-  separated_column: ^3.0.4
-  separated_row: ^3.0.4
   shimmer: ^3.0.0
 
 dev_dependencies:

@@ -8,7 +8,6 @@ import 'package:tenant_app/core/data/utils/exception.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/repositories/base_repository.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
-import 'package:tenant_app/core/domain/utils/network/network_info.dart';
 
 /// Every repository extends this and only describes the happy path inside
 /// [request] / [localRequest]. All try/catch, logging and exception →
@@ -16,9 +15,7 @@ import 'package:tenant_app/core/domain/utils/network/network_info.dart';
 class BaseRepositoryImpl implements BaseRepository {
   final Logger _logger;
 
-  // Kept for constructor-signature parity with the network layer; the mock
-  // backend (MockBackendInterceptor) performs the connectivity check itself.
-  BaseRepositoryImpl(NetworkInfo networkInfo, this._logger);
+  BaseRepositoryImpl(this._logger);
 
   @override
   Future<Either<Failure, T>> request<T>(FutureEitherFailureOrData<T> body) async {
@@ -35,7 +32,7 @@ class BaseRepositoryImpl implements BaseRepository {
       }
       if (e is CacheException) {
         _logger.w(e.toString());
-        return left(CacheFailure());
+        return left(const CacheFailure());
       }
       if (e is TimeoutException) {
         _logger.w(e.toString());
@@ -52,7 +49,7 @@ class BaseRepositoryImpl implements BaseRepository {
       return await body();
     } catch (e, stackTrace) {
       _logger.e(e.toString(), error: e, stackTrace: stackTrace);
-      return left(CacheFailure());
+      return left(const CacheFailure());
     }
   }
 

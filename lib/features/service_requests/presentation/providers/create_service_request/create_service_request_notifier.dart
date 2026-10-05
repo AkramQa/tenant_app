@@ -3,7 +3,7 @@ import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
-import 'package:tenant_app/features/service_requests/presentation/ui-models/create_service_request_input.dart';
+import 'package:tenant_app/features/service_requests/presentation/ui_models/create_service_request_input.dart';
 
 part 'create_service_request_state.dart';
 

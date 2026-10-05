@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:separated_column/separated_column.dart';
 import 'package:tenant_app/core/presentation/widgets/fields/obscure_toggle_text.dart';
-import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
 import 'package:tenant_app/core/theme/app_radius.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
+import 'package:tenant_app/core/utils/ext/screen_utils_ext.dart';
 
 abstract class AbstractTextField extends StatelessWidget {
   const AbstractTextField({
@@ -57,8 +56,8 @@ abstract class AbstractTextField extends StatelessWidget {
       child = buildField(context, suffixIcon: suffixIcon);
     }
 
-    return SeparatedColumn(
-      separatorBuilder: (_, __) => const SpacerH8(),
+    return Column(
+      spacing: context.dimens.spacing8.hMax,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) Text(label!, style: context.titleSmall?.copyWith(color: context.colors.cardTitle)),

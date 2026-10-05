@@ -18,7 +18,7 @@ import 'package:tenant_app/core/theme/app_breakpoints.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/features/home/presentation/screens/home_screen.dart';
 import 'package:tenant_app/features/auth/presentation/providers/sign_in/sign_in_notifier.dart';
-import 'package:tenant_app/features/auth/presentation/ui-models/sign_in_input.dart';
+import 'package:tenant_app/features/auth/presentation/ui_models/sign_in_input.dart';
 import 'package:tenant_app/features/auth/presentation/widgets/demo_credentials_widget.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {

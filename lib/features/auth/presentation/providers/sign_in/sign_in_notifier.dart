@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_response_model.dart';
 import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:tenant_app/features/auth/presentation/ui-models/sign_in_input.dart';
+import 'package:tenant_app/features/auth/presentation/ui_models/sign_in_input.dart';
 
 part 'sign_in_state.dart';
 

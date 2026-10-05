@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart' show Either, Unit, right, unit;
 import 'package:logger/logger.dart';
 import 'package:tenant_app/core/data/repositories/base_repository_impl.dart';
-import 'package:tenant_app/core/data/utils/network/network_info.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
-import 'package:tenant_app/core/domain/utils/network/network_info.dart';
 import 'package:tenant_app/features/auth/data/datasources/local/authentication_local_source.dart';
 import 'package:tenant_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_response_model.dart';
@@ -15,7 +13,6 @@ final authRepositoryOverride = authRepositoryProvider.overrideWith(
   (ref) => AuthRepositoryImpl(
     ref.watch(authRemoteDataSourceProvider),
     ref.watch(authenticationLocalSourceProvider),
-    ref.watch(networkInfoProvider),
     ref.watch(loggerProvider),
   ),
 );
@@ -24,7 +21,7 @@ class AuthRepositoryImpl extends BaseRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remote;
   final AuthenticationLocalSource local;
 
-  AuthRepositoryImpl(this.remote, this.local, NetworkInfo networkInfo, Logger logger) : super(networkInfo, logger);
+  AuthRepositoryImpl(this.remote, this.local, Logger logger) : super(logger);
 
   @override
   Future<Either<Failure, SignInResponseModel>> signIn({

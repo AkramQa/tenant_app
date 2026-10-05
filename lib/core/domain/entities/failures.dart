@@ -1,22 +1,29 @@
-import 'package:equatable/equatable.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
 
-abstract class Failure {}
+sealed class Failure {
+  const Failure();
+}
 
-class ServerFailure extends Equatable implements Failure {
+class ServerFailure extends Failure {
   final ServerErrorCode errorCode;
   final String message;
 
   const ServerFailure({required this.errorCode, this.message = ''});
 
   @override
-  List<Object> get props => [errorCode, message];
+  bool operator ==(Object other) =>
+      other is ServerFailure && other.errorCode == errorCode && other.message == message;
+
+  @override
+  int get hashCode => Object.hash(errorCode, message);
 }
 
-class CacheFailure implements Failure {}
+class CacheFailure extends Failure {
+  const CacheFailure();
+}
 
-class LogicFailure implements Failure {
+class LogicFailure extends Failure {
   final String message;
 
-  LogicFailure(this.message);
+  const LogicFailure(this.message);
 }
