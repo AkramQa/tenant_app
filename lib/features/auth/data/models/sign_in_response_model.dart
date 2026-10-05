@@ -1,30 +1,17 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_type.dart';
 import 'package:tenant_app/features/auth/data/models/tenant_info_model.dart';
 
-class SignInResponseModel extends Equatable {
-  final String accessToken;
-  final TenantInfoModel tenant;
-  final SignInType? signInType;
+part 'sign_in_response_model.freezed.dart';
+part 'sign_in_response_model.g.dart';
 
-  const SignInResponseModel({
-    required this.accessToken,
-    required this.tenant,
-    this.signInType,
-  });
+@freezed
+abstract class SignInResponseModel with _$SignInResponseModel {
+  const factory SignInResponseModel({
+    required String accessToken,
+    required TenantInfoModel tenant,
+    @JsonKey(fromJson: SignInTypeConverter.fromJson, toJson: SignInTypeConverter.toJson) SignInType? signInType,
+  }) = _SignInResponseModel;
 
-  factory SignInResponseModel.fromJson(Map<String, dynamic> json) => SignInResponseModel(
-        accessToken: json['access_token'] as String,
-        tenant: TenantInfoModel.fromJson(json['tenant'] as Map<String, dynamic>),
-        signInType: SignInTypeConverter.fromJson(json['sign_in_type'] as String?),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'access_token': accessToken,
-        'tenant': tenant.toJson(),
-        'sign_in_type': SignInTypeConverter.toJson(signInType),
-      };
-
-  @override
-  List<Object?> get props => [accessToken, tenant, signInType];
+  factory SignInResponseModel.fromJson(Map<String, dynamic> json) => _$SignInResponseModelFromJson(json);
 }
