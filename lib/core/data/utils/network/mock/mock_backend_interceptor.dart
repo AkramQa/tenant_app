@@ -27,11 +27,16 @@ class MockBackendInterceptor extends Interceptor {
     // Round-trip through JSON like a real wire: bodies and nested models become plain maps.
     options.data = _overTheWire(options.data);
     MockResponse? response;
-    for (final server in servers) {
-      response = await server.handle(options);
-      if (response != null) break;
+    try {
+      for (final server in servers) {
+        response = await server.handle(options);
+        if (response != null) break;
+      }
+      response ??= const MockResponse(404, message: 'Route not found');
+    } catch (_) {
+      // A broken mock must fail the request like a server error, never leave it pending.
+      response = const MockResponse(500, message: 'Mock server error');
     }
-    response ??= const MockResponse(404, message: 'Route not found');
 
     final Response<Object?> dioResponse =
         Response(requestOptions: options, statusCode: response.statusCode, data: _overTheWire(response.toJson()));

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:tenant_app/core/data/utils/exception.dart';
 
 part 'base_response.g.dart';
 
@@ -17,6 +18,13 @@ class BaseResponse<T> {
     this.error,
     this.data,
   });
+
+  /// The payload of a successful response; a missing one is a server error.
+  T get requireData {
+    final T? payload = data;
+    if (payload == null) throw const EmptyResponseException();
+    return payload;
+  }
 
   factory BaseResponse.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$BaseResponseFromJson(json, fromJsonT);

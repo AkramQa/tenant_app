@@ -32,7 +32,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   Future<Either<Failure, List<ServiceRequestModel>>> fetchServiceRequests() {
     return request(() async {
       final response = await remote.fetchServiceRequests();
-      return right(_sortedNewestFirst(response.data!.map(_withLocalImagePath).toList()));
+      return right(_sortedNewestFirst(response.requireData.map(_withLocalImagePath).toList()));
     });
   }
 
@@ -40,7 +40,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   Future<Either<Failure, ServiceRequestModel>> fetchServiceRequestDetails({required String requestId}) {
     return request(() async {
       final response = await remote.fetchServiceRequestDetails(requestId: requestId);
-      return right(_withLocalImagePath(response.data!));
+      return right(_withLocalImagePath(response.requireData));
     });
   }
 
@@ -65,7 +65,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
             imageFileName: imageFileName,
           ),
         );
-        return right(_withLocalImagePath(response.data!));
+        return right(_withLocalImagePath(response.requireData));
       } catch (_) {
         // Nothing references the copy if the request was not created.
         if (imageFileName != null) await local.deleteAttachment(fileName: imageFileName);

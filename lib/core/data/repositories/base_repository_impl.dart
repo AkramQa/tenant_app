@@ -29,6 +29,10 @@ class BaseRepositoryImpl implements BaseRepository {
         _logger.w(e.message ?? e.toString());
         return left(_mapDioException(e));
       }
+      if (e is EmptyResponseException) {
+        _logger.w(e.toString());
+        return left(const ServerFailure(errorCode: ServerErrorCode.serverError));
+      }
       if (e is CacheException) {
         _logger.w(e.toString());
         return left(CacheFailure());

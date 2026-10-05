@@ -76,6 +76,14 @@ void main() {
     expect(result, const Left(ServerFailure(errorCode: ServerErrorCode.notFound, message: 'Not found')));
   });
 
+  test('maps a success response without data to a serverError failure', () async {
+    when(() => remote.fetchServiceRequests()).thenAnswer((_) async => BaseResponse());
+
+    final result = await repository.fetchServiceRequests();
+
+    expect(result, const Left(ServerFailure(errorCode: ServerErrorCode.serverError)));
+  });
+
   group('ServiceRequestsRepositoryImpl — createServiceRequest', () {
     test('stores the attachment and sends its file name to the API', () async {
       when(() => local.saveAttachment(sourcePath: '/tmp/picked.jpg')).thenAnswer((_) async => 'stored.jpg');

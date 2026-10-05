@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tenant_app/core/data/utils/configuration.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
 import 'package:tenant_app/core/data/utils/network/mock/mock_backend_interceptor.dart';
+import 'package:tenant_app/core/data/utils/network/mock/mock_server.dart';
 import 'package:tenant_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:tenant_app/features/auth/data/datasources/remote/mock/auth_mock_server.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_type.dart';
@@ -95,4 +96,19 @@ void main() {
       throwsA(isA<DioException>().having((e) => e.type, 'type', DioExceptionType.connectionError)),
     );
   });
+
+  test('a throwing mock server fails with 500 instead of hanging', () async {
+    final dio = Dio(BaseOptions(validateStatus: (code) => code != null && code >= 200 && code < 300))
+      ..interceptors.add(MockBackendInterceptor(networkInfo, [_ThrowingServer()], latency: Duration.zero));
+
+    await expectLater(
+      dio.get<Object?>('https://example.com/anything'),
+      throwsA(isA<DioException>().having((e) => e.response?.statusCode, 'statusCode', 500)),
+    );
+  });
+}
+
+class _ThrowingServer implements MockServer {
+  @override
+  Future<MockResponse?> handle(RequestOptions options) async => throw StateError('broken mock');
 }

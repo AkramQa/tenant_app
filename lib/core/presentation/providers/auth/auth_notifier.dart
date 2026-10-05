@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/auth/data/models/tenant_info_model.dart';
-
 import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
+import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
 
 part 'auth_state.dart';
 
@@ -31,9 +34,16 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<Failure?> logout() async {
     final result = await _repository.clearCache();
     return result.fold((failure) => failure, (_) {
+      _clearUserData();
       state = Unauthenticated();
       return null;
     });
+  }
+
+  /// Drops the previous tenant's cached requests so the next account never sees them.
+  void _clearUserData() {
+    unawaited(ref.read(serviceRequestsRepositoryProvider).clearCachedServiceRequests());
+    ref.invalidate(serviceRequestsListProvider);
   }
 
   bool get isUserAuthenticated => state is Authenticated;

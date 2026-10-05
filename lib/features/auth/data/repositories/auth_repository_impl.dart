@@ -33,7 +33,7 @@ class AuthRepositoryImpl extends BaseRepositoryImpl implements AuthRepository {
   }) {
     return request(() async {
       final response = await remote.signIn(identifier: identifier, password: password);
-      final SignInResponseModel signInResponse = response.data!;
+      final SignInResponseModel signInResponse = response.requireData;
       await local.saveAccessToken(signInResponse.accessToken);
       await local.signInUser(signInResponse.tenant);
       return right(signInResponse);

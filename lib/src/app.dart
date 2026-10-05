@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,8 +13,6 @@ import 'package:tenant_app/core/theme/app_theme.dart';
 import 'package:tenant_app/core/utils/ext/build_context_ext.dart';
 import 'package:tenant_app/core/utils/forms/validation_messages.dart';
 import 'package:tenant_app/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
-import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
 
 const double _kMaxTextScaleFactor = 1.3;
 
@@ -35,7 +31,6 @@ class _AppState extends ConsumerState<App> {
     // Route back to sign-in when the session ends.
     ref.listen<AuthState>(authProvider, (previous, state) {
       if (previous is Authenticated && state is Unauthenticated) {
-        refreshAppData();
         _appRouter.go(SignInScreen.routePath);
       }
     });
@@ -72,11 +67,5 @@ class _AppState extends ConsumerState<App> {
         );
       },
     );
-  }
-
-  /// Drops per-user cached state after logout.
-  void refreshAppData() {
-    unawaited(ref.read(serviceRequestsRepositoryProvider).clearCachedServiceRequests());
-    ref.invalidate(serviceRequestsListProvider);
   }
 }

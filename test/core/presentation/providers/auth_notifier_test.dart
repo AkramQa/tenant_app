@@ -5,17 +5,26 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
 import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
 
 import '../../../helpers/fakers.dart';
 import '../../../helpers/mocks.dart';
 
 void main() {
   late MockAuthRepository authRepository;
+  late MockServiceRequestsRepository serviceRequestsRepository;
   late ProviderContainer container;
 
   setUp(() {
     authRepository = MockAuthRepository();
-    container = ProviderContainer(overrides: [authRepositoryProvider.overrideWithValue(authRepository)]);
+    serviceRequestsRepository = MockServiceRequestsRepository();
+    when(() => serviceRequestsRepository.clearCachedServiceRequests()).thenAnswer((_) async => const Right(unit));
+    container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepository),
+        serviceRequestsRepositoryProvider.overrideWithValue(serviceRequestsRepository),
+      ],
+    );
   });
 
   tearDown(() => container.dispose());
@@ -52,6 +61,7 @@ void main() {
 
       expect(failure, isNull);
       expect(container.read(authProvider), isA<Unauthenticated>());
+      verify(() => serviceRequestsRepository.clearCachedServiceRequests()).called(1);
     });
 
     test('keeps the session and returns the failure when clearing fails', () async {
@@ -62,6 +72,7 @@ void main() {
 
       expect(failure, cacheFailure);
       expect(container.read(authProvider), isA<Authenticated>());
+      verifyNever(() => serviceRequestsRepository.clearCachedServiceRequests());
     });
   });
 }
