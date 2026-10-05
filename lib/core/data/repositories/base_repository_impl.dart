@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import 'package:tenant_app/core/data/models/base_response.dart';
 import 'package:tenant_app/core/data/utils/exception.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/repositories/base_repository.dart';
@@ -15,7 +17,7 @@ class BaseRepositoryImpl implements BaseRepository {
   final Logger _logger;
 
   // Kept for constructor-signature parity with the network layer; the mock
-  // API client performs the connectivity check itself.
+  // backend (MockBackendInterceptor) performs the connectivity check itself.
   BaseRepositoryImpl(NetworkInfo networkInfo, this._logger);
 
   @override
@@ -23,9 +25,9 @@ class BaseRepositoryImpl implements BaseRepository {
     try {
       return await body();
     } catch (e, stackTrace) {
-      if (e is ServerException) {
-        _logger.w(e.toString());
-        return left(ServerFailure(errorCode: e.errorCode, message: e.message));
+      if (e is DioException) {
+        _logger.w(e.message ?? e.toString());
+        return left(_mapDioException(e));
       }
       if (e is CacheException) {
         _logger.w(e.toString());
@@ -49,4 +51,34 @@ class BaseRepositoryImpl implements BaseRepository {
       return left(CacheFailure());
     }
   }
+
+  ServerFailure _mapDioException(DioException e) {
+    final Response<dynamic>? response = e.response;
+    if (response == null) {
+      final bool isConnectivity = e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout;
+      return ServerFailure(
+        errorCode: isConnectivity ? ServerErrorCode.noInternetConnection : ServerErrorCode.serverError,
+      );
+    }
+    String message = '';
+    try {
+      message = BaseResponse<dynamic>.fromJson(response.data as Map<String, dynamic>, (_) => null).message ?? '';
+    } catch (_) {
+      // Non-envelope error body: fall back to the localized default message.
+    }
+    return ServerFailure(errorCode: _getErrorCode(response.statusCode ?? 500), message: message);
+  }
+
+  ServerErrorCode _getErrorCode(int statusCode) => switch (statusCode) {
+        401 => ServerErrorCode.unauthenticated,
+        403 => ServerErrorCode.forbidden,
+        404 => ServerErrorCode.notFound,
+        400 => ServerErrorCode.invalidData,
+        422 => ServerErrorCode.wrongInput,
+        406 => ServerErrorCode.customError,
+        _ => ServerErrorCode.serverError,
+      };
 }

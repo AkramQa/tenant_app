@@ -6,6 +6,7 @@ import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/utils/network/network_info.dart';
 import 'package:tenant_app/features/service_requests/data/datasources/local/service_requests_local_source.dart';
 import 'package:tenant_app/features/service_requests/data/datasources/remote/service_requests_remote_datasource.dart';
+import 'package:tenant_app/features/service_requests/data/models/create_service_request_body_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
@@ -32,7 +33,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   Future<Either<Failure, List<ServiceRequestModel>>> fetchServiceRequests() {
     return request(() async {
       final response = await remote.fetchServiceRequests();
-      return right(_sortedNewestFirst(response.map(_withLocalImagePath).toList()));
+      return right(_sortedNewestFirst(response.data!.map(_withLocalImagePath).toList()));
     });
   }
 
@@ -40,7 +41,7 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
   Future<Either<Failure, ServiceRequestModel>> fetchServiceRequestDetails({required String requestId}) {
     return request(() async {
       final response = await remote.fetchServiceRequestDetails(requestId: requestId);
-      return right(_withLocalImagePath(response));
+      return right(_withLocalImagePath(response.data!));
     });
   }
 
@@ -56,14 +57,16 @@ class ServiceRequestsRepositoryImpl extends BaseRepositoryImpl implements Servic
       // Real backend: this would be a multipart upload returning a URL/id.
       final String? imageFileName = imagePath == null ? null : await local.saveAttachment(sourcePath: imagePath);
       try {
-      final response = await remote.createServiceRequest(
-        serviceType: serviceType,
-        description: description,
-        preferredDate: preferredDate,
-        isUrgent: isUrgent,
-        imageFileName: imageFileName,
-      );
-      return right(_withLocalImagePath(response));
+        final response = await remote.createServiceRequest(
+          body: CreateServiceRequestBodyModel(
+            serviceType: serviceType,
+            description: description,
+            preferredDate: preferredDate,
+            isUrgent: isUrgent,
+            imageFileName: imageFileName,
+          ),
+        );
+        return right(_withLocalImagePath(response.data!));
       } catch (_) {
         // Nothing references the copy if the request was not created.
         if (imageFileName != null) await local.deleteAttachment(fileName: imageFileName);
