@@ -6,7 +6,7 @@ import 'package:tenant_app/features/auth/presentation/ui-models/sign_in_input.da
 
 part 'sign_in_state.dart';
 
-/// Screen-scoped (`@injectable` → autoDispose).
+/// Screen-scoped: disposed when the sign-in screen closes.
 final signInProvider = NotifierProvider.autoDispose<SignInNotifier, SignInState>(SignInNotifier.new);
 
 class SignInNotifier extends Notifier<SignInState> {

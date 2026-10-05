@@ -19,7 +19,7 @@ class _DashboardHomeScreenState extends ConsumerState<DashboardHomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Eagerly load the shared requests list (like a `lazy: false` provider).
+    // Eagerly load the shared requests list used by Home and Requests.
     Future.microtask(() => ref.read(serviceRequestsListProvider.notifier).fetchServiceRequests());
   }
 

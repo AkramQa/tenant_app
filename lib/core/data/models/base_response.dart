@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'base_response.g.dart';
 
-/// API envelope: `{ "message", "error", "data", "statusCode" }` (same as Ulearna).
+/// API envelope: `{ "message", "error", "data", "statusCode" }`.
 @JsonSerializable(genericArgumentFactories: true, createToJson: false, fieldRename: FieldRename.none)
 class BaseResponse<T> {
   @JsonKey(name: 'message', defaultValue: '', fromJson: getErrorMessage)

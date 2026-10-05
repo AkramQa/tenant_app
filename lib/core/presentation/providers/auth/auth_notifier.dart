@@ -6,7 +6,7 @@ import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dar
 
 part 'auth_state.dart';
 
-/// App-wide session state — the counterpart of Ulearna's `@Singleton() AuthBloc`.
+/// App-wide session state.
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
 class AuthNotifier extends Notifier<AuthState> {

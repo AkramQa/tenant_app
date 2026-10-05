@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tenant_app/core/domain/utils/network/network_info.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 /// Developer toggle (Profile → Developer options) that forces every mock
 /// API call to fail with `noInternetConnection`, to demo offline handling.
@@ -14,7 +14,6 @@ class SimulateOfflineNotifier extends Notifier<bool> {
   void setSimulateOffline(bool value) => state = value;
 }
 
-/// `@LazySingleton(as: NetworkInfo)`
 final networkInfoProvider = Provider<NetworkInfo>(
   (ref) => NetworkInfoImpl(
     ref.watch(connectionCheckerProvider),

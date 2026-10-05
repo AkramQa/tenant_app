@@ -26,7 +26,7 @@ import 'package:tenant_app/features/service_requests/presentation/widgets/reacti
 import 'package:tenant_app/features/service_requests/presentation/screens/service_request_submitted_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_service_type_selection.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 class CreateServiceRequestScreen extends ConsumerStatefulWidget {
   const CreateServiceRequestScreen({this.initialServiceType, super.key});

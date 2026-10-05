@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tenant_app/core/data/models/enum/languages_enum.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 part 'app_settings_state.dart';
 
-/// Persisted language + theme preferences (the HydratedBloc equivalent).
+/// Persisted language + theme preferences.
 final appSettingsProvider = NotifierProvider<AppSettingsNotifier, AppSettingsState>(AppSettingsNotifier.new);
 
 class AppSettingsNotifier extends Notifier<AppSettingsState> {

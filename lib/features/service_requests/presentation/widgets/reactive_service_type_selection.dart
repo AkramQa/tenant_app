@@ -6,8 +6,7 @@ import 'package:tenant_app/core/utils/ext/screen_utils_ext.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/presentation/utils/service_request_ui_utils.dart';
 
-/// Chip group bound to a `FormControl<ServiceType>` — same pattern as
-/// Ulearna's `ReactiveCourseReviewLevelSelection`.
+/// Chip group bound to a `FormControl<ServiceType>`.
 class ReactiveServiceTypeSelection extends ReactiveFormField<ServiceType, ServiceType> {
   ReactiveServiceTypeSelection({
     super.key,

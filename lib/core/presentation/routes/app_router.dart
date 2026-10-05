@@ -19,10 +19,10 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(deb
 /// Routes that don't require a session.
 const Set<String> _publicRoutes = {LauncherScreen.routePath, SignInScreen.routePath};
 
-/// `@LazySingleton() AppRouter`. Each screen owns its `routePath` constant.
+/// Each screen owns its `routePath` constant.
 ///
-/// The `redirect` plays the role of an `AuthGuard`: any protected route
-/// opened without a session lands on sign-in.
+/// The `redirect` sends any protected route opened without a session to
+/// sign-in.
 final appRouterProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,

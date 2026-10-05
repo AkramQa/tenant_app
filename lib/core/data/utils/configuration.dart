@@ -13,7 +13,6 @@ abstract class Configuration {
       };
 }
 
-/// `@Injectable(as: Configuration, env: [AppEnvironment.dev])`
 class DevConfiguration implements Configuration {
   @override
   String get environment => AppEnvironment.dev;
@@ -23,7 +22,6 @@ class DevConfiguration implements Configuration {
   String get getBaseUrl => 'https://dev-api.example.com/';
 }
 
-/// `@Injectable(as: Configuration, env: [AppEnvironment.staging])`
 class StagingConfiguration implements Configuration {
   @override
   String get environment => AppEnvironment.staging;
@@ -33,7 +31,6 @@ class StagingConfiguration implements Configuration {
   String get getBaseUrl => 'https://stg-api.example.com/';
 }
 
-/// `@Injectable(as: Configuration, env: [AppEnvironment.prod])`
 class ProductionConfiguration implements Configuration {
   @override
   String get environment => AppEnvironment.prod;
@@ -43,7 +40,7 @@ class ProductionConfiguration implements Configuration {
   String get getBaseUrl => 'https://api.example.com/';
 }
 
-/// `@preResolve` — overridden in `main()` with the flavor's configuration.
+/// Overridden in `main()` with the flavor's configuration.
 final configurationProvider = Provider<Configuration>(
-  (ref) => throw UnimplementedError('configurationProvider is pre-resolved in configureInjection()'),
+  (ref) => throw UnimplementedError('configurationProvider is created in initAppDependencies()'),
 );

@@ -4,7 +4,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:tenant_app/core/data/models/base_response.dart';
 import 'package:tenant_app/core/data/utils/configuration.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_response_model.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 part 'auth_remote_datasource.g.dart';
 
@@ -16,7 +16,6 @@ abstract class AuthRemoteDataSource {
   });
 }
 
-/// `@LazySingleton(as: AuthRemoteDataSource)`
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>(
   (ref) => AuthRemoteDataSourceImpl(ref.watch(dioProvider), ref.watch(configurationProvider)),
 );

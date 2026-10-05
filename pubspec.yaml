@@ -67,7 +67,7 @@ dev_dependencies:
   json_serializable: ^6.9.5
   retrofit_generator: ^9.7.0
   reactive_forms_generator: ^8.0.3
-  # Same codegen stack as Ulearna: reactive_forms_generator 8.0.x needs analyzer 7.
+  # reactive_forms_generator 8.0.x needs analyzer 7.
   analyzer: ^7.3.0
 
 flutter:

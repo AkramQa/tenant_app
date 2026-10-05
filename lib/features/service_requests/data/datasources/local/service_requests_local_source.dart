@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:tenant_app/core/data/utils/constants.dart';
 import 'package:tenant_app/core/data/utils/exception.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class ServiceRequestsLocalDataSource {
@@ -29,7 +29,6 @@ abstract class ServiceRequestsLocalDataSource {
   Future<void> clearCachedServiceRequests();
 }
 
-/// `@LazySingleton(as: ServiceRequestsLocalDataSource)`
 final serviceRequestsLocalDataSourceProvider = Provider<ServiceRequestsLocalDataSource>(
   (ref) => ServiceRequestsLocalDataSourceImpl(
     ref.watch(hiveCacheBoxProvider),

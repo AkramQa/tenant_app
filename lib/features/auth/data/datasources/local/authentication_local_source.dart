@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
 import 'package:tenant_app/core/data/utils/exception.dart';
 import 'package:tenant_app/features/auth/data/models/tenant_info_model.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 abstract class AuthenticationLocalSource {
   /// save user access token (Keychain / Keystore)
@@ -28,7 +28,6 @@ abstract class AuthenticationLocalSource {
   Future<bool> deleteSignedInUserInfo();
 }
 
-/// `@LazySingleton(as: AuthenticationLocalSource)`
 final authenticationLocalSourceProvider = Provider<AuthenticationLocalSource>(
   (ref) => AuthenticationLocalSourceImpl(
     ref.watch(secureStorageProvider),

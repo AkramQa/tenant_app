@@ -1,4 +1,4 @@
-/// Arabic translations. Keys are snake_case like the reference codebase.
+/// Arabic translations. Keys are snake_case.
 const Map<String, String> intlAr = {
   'app_name': 'بوابة المستأجر',
   'app_tagline': 'منزلك في أيدٍ أمينة',

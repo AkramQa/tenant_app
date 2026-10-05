@@ -15,45 +15,35 @@ import 'package:tenant_app/features/auth/data/datasources/remote/mock/auth_mock_
 import 'package:tenant_app/features/service_requests/data/datasources/remote/mock/service_requests_mock_server.dart';
 import 'package:uuid/uuid.dart';
 
-/// Third-party / platform bindings — the Riverpod counterpart of Ulearna's
-/// `@module abstract class InjectableModule`.
+/// App-wide providers for platform and third-party services.
 ///
-/// Providers that throw are `@preResolve` dependencies: they are created
-/// asynchronously in `configureInjection()` and overridden in `main()`.
+/// Providers that throw are created asynchronously in `initAppDependencies()`
+/// and overridden in `main()`.
 
-/// `@preResolve @lazySingleton`
 final sharedPreferencesProvider = Provider<SharedPreferences>(
-  (ref) => throw UnimplementedError('sharedPreferencesProvider is pre-resolved in configureInjection()'),
+  (ref) => throw UnimplementedError('sharedPreferencesProvider is created in initAppDependencies()'),
 );
 
-/// `@preResolve @lazySingleton`
 final hiveCacheBoxProvider = Provider<Box<dynamic>>(
-  (ref) => throw UnimplementedError('hiveCacheBoxProvider is pre-resolved in configureInjection()'),
+  (ref) => throw UnimplementedError('hiveCacheBoxProvider is created in initAppDependencies()'),
 );
 
-/// `@preResolve @lazySingleton`
 final appDocumentsDirectoryProvider = Provider<Directory>(
-  (ref) => throw UnimplementedError('appDocumentsDirectoryProvider is pre-resolved in configureInjection()'),
+  (ref) => throw UnimplementedError('appDocumentsDirectoryProvider is created in initAppDependencies()'),
 );
 
-/// `@lazySingleton`
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (ref) => const FlutterSecureStorage(),
 );
 
-/// `@lazySingleton`
 final connectionCheckerProvider = Provider<InternetConnection>((ref) => InternetConnection());
 
-/// `@lazySingleton`
 final imagePickerProvider = Provider<ImagePicker>((ref) => ImagePicker());
 
-/// `@lazySingleton`
 final loggerProvider = Provider<Logger>((ref) => Logger(printer: PrettyPrinter(methodCount: 0)));
 
-/// `@lazySingleton`
 final uuidProvider = Provider<Uuid>((ref) => const Uuid());
 
-/// `@injectable BaseOptions`
 final dioOptionsProvider = Provider<BaseOptions>(
   (ref) => BaseOptions(
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -64,7 +54,6 @@ final dioOptionsProvider = Provider<BaseOptions>(
   ),
 );
 
-/// `@lazySingleton Dio`
 final dioProvider = Provider<Dio>((ref) {
   final SharedPreferences sharedPreferences = ref.watch(sharedPreferencesProvider);
   final dio = Dio(ref.watch(dioOptionsProvider));

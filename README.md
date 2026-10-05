@@ -2,7 +2,7 @@
 
 A tenant app built for the Flutter take-home assignment. Tenants sign in, see their property and unit, create service requests (maintenance, plumbing, electrical, AC, cleaning) with an optional photo, and track each one through **Pending → Assigned → In Progress → Completed**.
 
-Built with **Clean Architecture** and **Riverpod**, following the conventions of the production app I work on (Ulearna).
+Built with **Clean Architecture** and **Riverpod**.
 
 📸 Screenshots (English, Arabic/RTL, dark mode): [`docs/screenshots/`](docs/screenshots/)
 
@@ -110,7 +110,7 @@ lib/
 
 **How I used it**
 
-I made the decisions and the assistant helped me deliver them faster. I set the architecture and conventions from the production app I work on (Ulearna), chose the stack (Riverpod, go_router, freezed, Retrofit, build flavors) and decided the scope of each change. I then asked the assistant to help with specific tasks:
+I made the decisions and the assistant helped me deliver them faster. I set the architecture and conventions, chose the stack (Riverpod, go_router, freezed, Retrofit, build flavors) and decided the scope of each change. I then asked the assistant to help with specific tasks:
 
 - Repetitive code: models, notifier states, form inputs, the Retrofit and mock-backend setup
 - First drafts of tests and Arabic translations, which I then reviewed
@@ -119,13 +119,13 @@ I made the decisions and the assistant helped me deliver them faster. I set the 
 
 **What I did and reviewed myself**
 
-- **Architecture and conventions:** I brought over the structure, naming, scripts and build flavors from the production app I work on, so the project reads like a real codebase rather than a demo.
+- **Architecture and conventions:** I defined the layer structure, naming, scripts and build flavors so the project reads like a production codebase rather than a demo.
 - **Technical decisions:**
   - Flavors are required: there's no silent default, so every build states its environment.
-  - The original iOS scheme is kept, as in our production project.
+  - The original iOS `Runner` scheme is kept alongside the flavor schemes.
   - Generated code is committed, so the project runs right after cloning.
   - Mocking happens at the HTTP level (a Dio interceptor) instead of with fake data sources, so the real Retrofit and Dio path is used everywhere.
-  - Freezed, Retrofit, `BaseResponse` and generated forms follow the same patterns as our production app.
+  - Models, API clients and forms are generated (freezed, Retrofit with a `BaseResponse` envelope, reactive_forms_generator).
 - **Hand fixes:**
   - I set up the demo tenant data.
   - I spotted that an old signed-in session kept showing outdated profile data, and traced it to the cached user.

@@ -10,9 +10,8 @@ import 'package:tenant_app/features/service_requests/data/models/create_service_
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
-/// `@LazySingleton(as: ServiceRequestsRepository)`
 final serviceRequestsRepositoryOverride = serviceRequestsRepositoryProvider.overrideWith(
   (ref) => ServiceRequestsRepositoryImpl(
     ref.watch(serviceRequestsRemoteDataSourceProvider),

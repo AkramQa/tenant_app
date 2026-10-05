@@ -5,7 +5,7 @@ import 'package:tenant_app/core/data/models/base_response.dart';
 import 'package:tenant_app/core/data/utils/configuration.dart';
 import 'package:tenant_app/features/service_requests/data/models/create_service_request_body_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
 part 'service_requests_remote_datasource.g.dart';
 
@@ -17,7 +17,6 @@ abstract class ServiceRequestsRemoteDataSource {
   Future<BaseResponse<ServiceRequestModel>> createServiceRequest({required CreateServiceRequestBodyModel body});
 }
 
-/// `@LazySingleton(as: ServiceRequestsRemoteDataSource)`
 final serviceRequestsRemoteDataSourceProvider = Provider<ServiceRequestsRemoteDataSource>(
   (ref) => ServiceRequestsRemoteDataSourceImpl(ref.watch(dioProvider), ref.watch(configurationProvider)),
 );

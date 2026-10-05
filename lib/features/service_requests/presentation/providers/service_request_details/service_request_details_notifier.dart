@@ -7,7 +7,7 @@ import 'package:tenant_app/features/service_requests/domain/repositories/service
 
 part 'service_request_details_state.dart';
 
-/// One notifier per request id (`@factoryParam` → `.family`), disposed when
+/// One notifier per request id, disposed when
 /// the details screen closes.
 final serviceRequestDetailsProvider = NotifierProvider.autoDispose
     .family<ServiceRequestDetailsNotifier, ServiceRequestDetailsState, String>(ServiceRequestDetailsNotifier.new);

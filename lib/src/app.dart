@@ -32,7 +32,7 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
-    // Global auth reaction (Ulearna's MultiBlocListener on AuthBloc).
+    // Route back to sign-in when the session ends.
     ref.listen<AuthState>(authProvider, (previous, state) {
       if (previous is Authenticated && state is Unauthenticated) {
         refreshAppData();

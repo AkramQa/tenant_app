@@ -1,4 +1,4 @@
-/// English translations. Keys are snake_case like the reference codebase.
+/// English translations. Keys are snake_case.
 const Map<String, String> intlEn = {
   'app_name': 'Tenant Hub',
   'app_tagline': 'Your home, taken care of',

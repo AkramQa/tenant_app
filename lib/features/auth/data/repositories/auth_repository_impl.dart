@@ -9,9 +9,8 @@ import 'package:tenant_app/features/auth/data/datasources/remote/auth_remote_dat
 import 'package:tenant_app/features/auth/data/models/sign_in_response_model.dart';
 import 'package:tenant_app/features/auth/data/models/tenant_info_model.dart';
 import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:tenant_app/injectable_module.dart';
+import 'package:tenant_app/core/di/app_providers.dart';
 
-/// `@LazySingleton(as: AuthRepository)`
 final authRepositoryOverride = authRepositoryProvider.overrideWith(
   (ref) => AuthRepositoryImpl(
     ref.watch(authRemoteDataSourceProvider),

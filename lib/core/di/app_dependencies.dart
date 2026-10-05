@@ -9,10 +9,9 @@ import 'package:tenant_app/core/data/utils/constants.dart';
 import 'package:tenant_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:tenant_app/features/service_requests/data/repositories/service_requests_repository_impl.dart';
 
-/// Async dependencies that must exist before the first frame
-/// (the `@preResolve` registrations of the GetIt setup).
-class PreResolvedDependencies {
-  const PreResolvedDependencies({
+/// Async dependencies that must exist before the first frame.
+class AppDependencies {
+  const AppDependencies({
     required this.sharedPreferences,
     required this.hiveCacheBox,
     required this.documentsDirectory,
@@ -28,16 +27,16 @@ class PreResolvedDependencies {
 /// Binds each domain repository provider to its data-layer implementation.
 final List<Override> repositoryOverrides = [authRepositoryOverride, serviceRequestsRepositoryOverride];
 
-/// Equivalent of `configureInjection()`. Everything else is wired lazily by
+/// Creates the async dependencies. Everything else is wired lazily by
 /// Riverpod providers declared next to the class they create.
-Future<PreResolvedDependencies> configureInjection(String environment) async {
+Future<AppDependencies> initAppDependencies(String environment) async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final hiveCacheBox = await Hive.openBox<dynamic>(HiveKeys.kCacheBox);
 
-  return PreResolvedDependencies(
+  return AppDependencies(
     sharedPreferences: sharedPreferences,
     hiveCacheBox: hiveCacheBox,
     documentsDirectory: documentsDirectory,

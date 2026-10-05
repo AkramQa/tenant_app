@@ -8,8 +8,7 @@ import 'package:tenant_app/features/service_requests/domain/repositories/service
 
 part 'service_requests_list_state.dart';
 
-/// App-wide list shared by Home ("recent requests") and the Requests tab —
-/// the counterpart of a `lazy: false` BlocProvider in Ulearna's `app.dart`.
+/// App-wide list shared by Home ("recent requests") and the Requests tab.
 final serviceRequestsListProvider = NotifierProvider<ServiceRequestsListNotifier, ServiceRequestsListState>(
   ServiceRequestsListNotifier.new,
 );
