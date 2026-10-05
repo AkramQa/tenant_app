@@ -5,7 +5,7 @@ import 'package:tenant_app/features/service_requests/data/models/request_status.
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 
-TenantInfoModel fakeTenantInfoModel({String fullName = 'Sara Al Mansoori'}) => TenantInfoModel(
+TenantInfoModel fakeTenantInfoModel({String fullName = 'Akram Qassem'}) => TenantInfoModel(
       tenantId: 'tenant-001',
       fullName: fullName,
       email: 'tenant@demo.com',

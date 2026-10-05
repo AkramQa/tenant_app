@@ -35,7 +35,7 @@ class TenantInfoModel extends Equatable {
         'unit_number': unitNumber,
       };
 
-
+  /// "AQ" for "Akram Qassem" — used by avatars.
   String get initials {
     final parts = fullName.trim().split(RegExp(r'\s+')).where((part) => part.isNotEmpty).toList();
     if (parts.isEmpty) return '';
