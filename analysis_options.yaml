@@ -8,7 +8,5 @@ linter:
     avoid_print: true
 
 analyzer:
-  exclude:
-    - lib/generated/**
   errors:
     invalid_annotation_target: ignore

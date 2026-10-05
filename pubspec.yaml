@@ -62,7 +62,6 @@ dev_dependencies:
   mocktail: ^1.0.4
   flutter_flavorizr: ^2.6.0
   build_runner: ^2.5.4
-  intl_utils: ^2.8.11
   freezed: ^3.0.0
   json_serializable: ^6.9.5
   retrofit_generator: ^9.7.0
@@ -75,9 +74,6 @@ flutter:
   # default-flavor: dev
   uses-material-design: true
 
-# Run command: dart run intl_utils:generate (./scripts/generate_localizations.sh)
-flutter_intl:
-  enabled: true
 
 # Run command: dart run flutter_flavorizr (./scripts/project_setup.sh)
 flavorizr:

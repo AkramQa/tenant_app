@@ -7,8 +7,8 @@ import 'package:tenant_app/core/l10n/translations/intl_en.dart';
 
 /// App strings (English + Arabic). Access with `context.l10n.some_key`.
 ///
-/// Plain Dart (no code generation): add a key to both `translations/intl_*.dart`
-/// maps and expose it with a getter below.
+/// To add a string: add the key to both `translations/intl_*.dart` maps and
+/// expose it with a getter below.
 class AppLocalizations {
   AppLocalizations(this.locale) : _strings = _translations[locale.languageCode] ?? intlEn;
 
