@@ -71,12 +71,9 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
 
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.new_service_request)),
-      body: ReactiveFormBuilder(
-        form: () => CreateServiceRequestInputForm.buildFormGroup(
-          CreateServiceRequestInput(serviceType: widget.initialServiceType),
-        ),
-        builder: (BuildContext context, FormGroup formGroup, Widget? child) {
-          final form = CreateServiceRequestInputForm(formGroup);
+      body: CreateServiceRequestInputFormBuilder(
+        model: CreateServiceRequestInput(serviceType: widget.initialServiceType),
+        builder: (BuildContext context, CreateServiceRequestInputForm form, Widget? child) {
           return SafeArea(
             child: Column(
               children: [

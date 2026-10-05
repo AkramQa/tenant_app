@@ -44,7 +44,7 @@ dependencies:
   logger: ^2.5.0
 
   # FORMS
-  reactive_forms: ^18.1.1
+  reactive_forms: '>=18.1.1 <18.2.0' # 18.2 changes errors type used by reactive_forms_generator 8.0
   reactive_forms_annotations: '>=8.0.1 <8.1.0' # must match reactive_forms_generator 8.0.x
 
   # UI

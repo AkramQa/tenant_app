@@ -54,10 +54,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> with ScreenLoader, 
 
     return Scaffold(
       body: SafeArea(
-        child: ReactiveFormBuilder(
-          form: SignInInputForm.buildFormGroup,
-          builder: (BuildContext context, FormGroup formGroup, Widget? child) {
-            final form = SignInInputForm(formGroup);
+        child: SignInInputFormBuilder(
+          model: SignInInput(),
+          builder: (BuildContext context, SignInInputForm form, Widget? child) {
             return Center(
               child: SingleChildScrollView(
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
