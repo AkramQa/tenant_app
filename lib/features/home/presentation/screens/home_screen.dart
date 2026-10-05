@@ -14,13 +14,28 @@ import 'package:tenant_app/features/home/presentation/widgets/recent_service_req
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/create_service_request_screen.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   static const String routePath = '/home';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  /// The FAB shrinks to an icon once scrolled, so it hides less content.
+  bool _isFabExtended = true;
+
+  bool _onScroll(ScrollNotification notification) {
+    if (notification.depth != 0) return false;
+    final bool isExtended = notification.metrics.pixels <= 0;
+    if (isExtended != _isFabExtended) setState(() => _isFabExtended = isExtended);
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final tenant = ref.watch(authProvider.select((state) => state is Authenticated ? state.user : null));
     if (tenant == null) return const Scaffold(body: Loader());
 
@@ -28,6 +43,8 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'home_fab',
         onPressed: () => context.push(CreateServiceRequestScreen.routePath),
+        isExtended: _isFabExtended,
+        tooltip: context.l10n.new_request,
         icon: const Icon(Icons.add_rounded),
         label: Text(context.l10n.new_request),
       ),
@@ -35,30 +52,33 @@ class HomeScreen extends ConsumerWidget {
         bottom: false,
         child: RefreshIndicator.adaptive(
           onRefresh: () => ref.read(serviceRequestsListProvider.notifier).fetchServiceRequests(),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            // Bottom padding keeps content clear of the FAB.
-            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 96.h),
-            child: ResponsiveCenterWidget(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  HomeHeaderWidget(tenant: tenant),
-                  const SpacerH24(),
-                  TitleViewAll(title: context.l10n.quick_services),
-                  const SpacerH12(),
-                  QuickServicesWidget(
-                    onServiceSelected: (serviceType) =>
-                        context.push(CreateServiceRequestScreen.routePath, extra: serviceType),
-                  ),
-                  const SpacerH24(),
-                  TitleViewAll(
-                    title: context.l10n.recent_requests,
-                    onViewAllPressed: () => StatefulNavigationShell.of(context).goBranch(1),
-                  ),
-                  const SpacerH8(),
-                  const RecentServiceRequestsWidget(),
-                ],
+          child: NotificationListener<ScrollNotification>(
+            onNotification: _onScroll,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              // Bottom padding keeps content clear of the FAB.
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 96.h),
+              child: ResponsiveCenterWidget(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    HomeHeaderWidget(tenant: tenant),
+                    const SpacerH24(),
+                    TitleViewAll(title: context.l10n.quick_services),
+                    const SpacerH12(),
+                    QuickServicesWidget(
+                      onServiceSelected: (serviceType) =>
+                          context.push(CreateServiceRequestScreen.routePath, extra: serviceType),
+                    ),
+                    const SpacerH24(),
+                    TitleViewAll(
+                      title: context.l10n.recent_requests,
+                      onViewAllPressed: () => StatefulNavigationShell.of(context).goBranch(1),
+                    ),
+                    const SpacerH8(),
+                    const RecentServiceRequestsWidget(),
+                  ],
+                ),
               ),
             ),
           ),
