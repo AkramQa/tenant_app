@@ -14,18 +14,16 @@ The project follows **Clean Architecture** with **Riverpod** for state managemen
 
 1. Unzip / clone the project.
 2. In Android Studio, choose **File → Open** and select the `tenant_app` folder (the one containing `pubspec.yaml`).
-3. Edit the `main.dart` run configuration and set **Build flavor** to `dev` (or `stg` / `prod`).
-4. Pick an emulator or device and press **▶ Run**. Android Studio runs `pub get` automatically.
+3. Pick an emulator or device and press **▶ Run** on `main.dart`. Android Studio runs `pub get` automatically.
 
-From the command line:
+From the command line, the equivalent is `flutter run` (iOS: `flutter run` on a simulator). It builds the `dev` flavor by default (`default-flavor` in `pubspec.yaml`). To pick another flavor:
 
 ```bash
-flutter run --flavor dev -t lib/main.dart
-flutter run --flavor stg -t lib/main.dart
-flutter run --flavor prod -t lib/main.dart
+flutter run --flavor stg
+flutter run --flavor prod
 ```
 
-A flavor is required: plain `flutter run` fails because the Android and iOS projects define per-flavor targets. In Xcode, pick the `dev` / `stg` / `prod` scheme.
+In Xcode, open `ios/Runner.xcworkspace` and pick the `dev` / `stg` / `prod` scheme.
 
 ### Flavors
 
@@ -47,7 +45,7 @@ Configured in the `flavorizr:` block of `pubspec.yaml`. At runtime `FlavorSettin
 ./scripts/firebase_setup.sh         # flutterfire per flavor (fill the TODO project names first)
 ```
 
-There is **no code-generation step**: models, forms, routes and translations are all plain Dart. The `android/` and `ios/` projects are included and already configured:
+None of these are needed to run the app. Models, forms, routes and translations are hand-written Dart, so there is no required code-generation step. `build_runner` and `intl_utils` are wired in, matching the reference codebase, so generators can be added later without changing the setup. The `android/` and `ios/` projects are included and already configured:
 - **iOS:** camera/photo permissions and Arabic localization
 - **Android:** `INTERNET` permission and `minSdk 24`
 
@@ -139,7 +137,7 @@ Each feature is split into **data → domain → presentation**.
 | `@injectable` screen-scoped bloc | `NotifierProvider.autoDispose` |
 | `@factoryParam` + instance-name caching | `NotifierProvider.autoDispose.family` (one instance per id, auto-disposed) |
 | `@Singleton()` `AuthBloc` | `authProvider` (`core/presentation/providers/auth`) |
-| `@LazySingleton(as: XRepository)` | `final xRepositoryProvider = Provider<XRepository>(…)` declared next to `XRepositoryImpl` |
+| `@LazySingleton(as: XRepository)` | `xRepositoryProvider` declared in `domain/`, bound to `XRepositoryImpl` via an override in `main()` |
 | `@module` / `@preResolve` | `injectable_module.dart` providers / `configureInjection()` + `ProviderScope.overrides` |
 | `BlocListener` / `BlocBuilder(bloc: getIt<…>())` | `ref.listen` / `ref.watch` |
 | `MultiBlocProvider(lazy: false)` | shared `NotifierProvider` + an eager fetch in the dashboard |
@@ -158,7 +156,7 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 
 `flutter_riverpod`, `go_router`, `dartz`, `equatable`, `reactive_forms`, `hive`, `shared_preferences`, `flutter_secure_storage`, `image_picker`, `internet_connection_checker_plus`, `flutter_screenutil`, `shimmer`, `mocktail`.
 
-**Why no code generation?** The reference codebase uses build_runner generators. This project deliberately avoids them so that it opens and runs with no setup step. The generated-style APIs (typed form controls, `fromJson`/`toJson`, `copyWith`, `context.l10n.*`) are kept, just hand-written.
+**Why no code generation?** The reference codebase uses build_runner generators. This project deliberately avoids generated code so that it opens and runs with no setup step. The generated-style APIs (typed form controls, `fromJson`/`toJson`, `copyWith`, `context.l10n.*`) are kept, just hand-written.
 
 ---
 
@@ -166,15 +164,21 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 
 - **Photos** are copied from the picker's temp folder into the app documents folder. Only the **file name** is persisted, and the absolute path is resolved at read time, because iOS changes the app container path between installs and updates.
 - **Status progression** is server-driven. With the mock API, new requests stay *Pending*; the seeded requests demonstrate the other states and the timeline.
-- **Models double as entities.** As in the reference codebase, data models (freezed) are used across layers instead of separate domain entities, which keeps a small app free of mapping boilerplate.
+- **Models double as entities.** As in the reference codebase, the (hand-written, immutable) data models are used across layers instead of separate domain entities, so domain and presentation import `data/models`. This keeps a small app free of mapping boilerplate. Repository *implementations* stay behind the domain: each `xRepositoryProvider` is declared in `domain/` and bound to its `XRepositoryImpl` in `main()` (`repositoryOverrides` in `injection.dart`), so notifiers never import the data layer's repositories.
 - **Not included (out of scope):** Firebase/Crashlytics (only the setup script), push notifications, and CI.
 
 ---
 
 ## AI-assisted development
 
-> _Complete this section honestly before submitting — it's required by the assignment._
-
-- **Tools used:** _e.g. Claude (Anthropic), GitHub Copilot, …_
-- **What they were used for:** _e.g. scaffolding the project structure from my existing house style, generating boilerplate (models, states, widgets), translations, tests and this README._
-- **What I reviewed / changed manually:** _e.g. verified the build and ran the app on iOS & Android, fixed X, adjusted UI Y, reviewed architecture decisions, rewrote Z…_
+- **Tools used:** [Claude Code](https://claude.com/claude-code) (Anthropic). Commits it helped with carry a `Co-Authored-By: Claude` trailer.
+- **What it was used for:**
+  - Translating my production house style (Ulearna: Clean Architecture, Bloc + GetIt, auto_route, freezed) into the Riverpod + go_router equivalents (see the mapping table above)
+  - Boilerplate: hand-written models with `fromJson`/`toJson`/`copyWith`, sealed notifier states, typed form wrappers
+  - The Arabic translations and the unit and widget tests
+  - Build flavors and setup scripts mirroring the reference project
+  - A requirements audit against the assignment brief, the bug fixes that came out of it, and drafting this README
+- **What I reviewed / changed manually:**
+  - <!-- TODO(Akram): e.g. architecture decisions, UI/UX choices, screens you reworked, bugs you found on device -->
+  - <!-- TODO(Akram): how you verified it (devices/simulators used, flows tested by hand) -->
+  - Every generated change was reviewed before committing. I can explain or modify any part of it.

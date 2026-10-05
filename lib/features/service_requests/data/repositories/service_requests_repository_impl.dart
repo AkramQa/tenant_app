@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart' show Either, right;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tenant_app/core/data/repositories/base_repository_impl.dart';
 import 'package:tenant_app/core/data/utils/network/network_info.dart';
@@ -13,7 +12,7 @@ import 'package:tenant_app/features/service_requests/domain/repositories/service
 import 'package:tenant_app/injectable_module.dart';
 
 /// `@LazySingleton(as: ServiceRequestsRepository)`
-final serviceRequestsRepositoryProvider = Provider<ServiceRequestsRepository>(
+final serviceRequestsRepositoryOverride = serviceRequestsRepositoryProvider.overrideWith(
   (ref) => ServiceRequestsRepositoryImpl(
     ref.watch(serviceRequestsRemoteDataSourceProvider),
     ref.watch(serviceRequestsLocalDataSourceProvider),

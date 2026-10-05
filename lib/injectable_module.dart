@@ -32,7 +32,7 @@ final appDocumentsDirectoryProvider = Provider<Directory>(
 
 /// `@lazySingleton`
 final secureStorageProvider = Provider<FlutterSecureStorage>(
-  (ref) => const FlutterSecureStorage(aOptions: AndroidOptions(encryptedSharedPreferences: true)),
+  (ref) => const FlutterSecureStorage(),
 );
 
 /// `@lazySingleton`

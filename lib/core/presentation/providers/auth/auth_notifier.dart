@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/auth/data/models/tenant_info_model.dart';
-import 'package:tenant_app/features/auth/data/repositories/auth_repository_impl.dart';
+
 import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
 
 part 'auth_state.dart';

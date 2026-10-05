@@ -52,6 +52,7 @@ class AppColors extends ColorScheme {
   });
 
   /// Scaffold background (slightly off the card [surface]).
+  @override
   final Color background;
   final Color primaryHighlight;
   final Color cardTitle;

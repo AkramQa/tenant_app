@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
-import 'package:tenant_app/features/service_requests/data/repositories/service_requests_repository_impl.dart';
+
 import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
 
 part 'service_request_details_state.dart';

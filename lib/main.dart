@@ -18,6 +18,7 @@ Future<void> main() async {
     runApp(
       ProviderScope(
         overrides: [
+          ...repositoryOverrides,
           sharedPreferencesProvider.overrideWithValue(dependencies.sharedPreferences),
           hiveCacheBoxProvider.overrideWithValue(dependencies.hiveCacheBox),
           appDocumentsDirectoryProvider.overrideWithValue(dependencies.documentsDirectory),

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart' show Either, Unit, right, unit;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tenant_app/core/data/repositories/base_repository_impl.dart';
 import 'package:tenant_app/core/data/utils/network/network_info.dart';
@@ -13,7 +12,7 @@ import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dar
 import 'package:tenant_app/injectable_module.dart';
 
 /// `@LazySingleton(as: AuthRepository)`
-final authRepositoryProvider = Provider<AuthRepository>(
+final authRepositoryOverride = authRepositoryProvider.overrideWith(
   (ref) => AuthRepositoryImpl(
     ref.watch(authRemoteDataSourceProvider),
     ref.watch(authenticationLocalSourceProvider),

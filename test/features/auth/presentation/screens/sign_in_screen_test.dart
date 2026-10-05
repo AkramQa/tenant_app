@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tenant_app/core/data/utils/constants.dart';
-import 'package:tenant_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:tenant_app/features/auth/presentation/screens/sign_in_screen.dart';
 
 import '../../../../helpers/mocks.dart';

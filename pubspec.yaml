@@ -60,6 +60,8 @@ dev_dependencies:
   intl_utils: ^2.8.16
 
 flutter:
+  # Lets plain `flutter run` work; pass --flavor stg/prod to override.
+  default-flavor: dev
   uses-material-design: true
 
 # Run command: dart run intl_utils:generate (./scripts/generate_localizations.sh)

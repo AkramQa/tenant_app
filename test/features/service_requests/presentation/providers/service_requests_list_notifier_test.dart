@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
-import 'package:tenant_app/features/service_requests/data/repositories/service_requests_repository_impl.dart';
+import 'package:tenant_app/features/service_requests/domain/repositories/service_requests_repository.dart';
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_list/service_requests_list_notifier.dart';
 
 import '../../../../helpers/fakers.dart';

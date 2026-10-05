@@ -1,7 +1,13 @@
 import 'package:dartz/dartz.dart' show Either;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
+
+/// Bound to its data-layer implementation in `main()` (see `repositoryOverrides`).
+final serviceRequestsRepositoryProvider = Provider<ServiceRequestsRepository>(
+  (ref) => throw UnimplementedError('serviceRequestsRepositoryProvider is overridden in main()'),
+);
 
 abstract class ServiceRequestsRepository {
   /// Remote list, newest first.

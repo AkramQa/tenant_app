@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tenant_app/core/domain/entities/failures.dart';
 import 'package:tenant_app/core/domain/utils/constants.dart';
 import 'package:tenant_app/features/auth/data/models/sign_in_response_model.dart';
-import 'package:tenant_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:tenant_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:tenant_app/features/auth/presentation/providers/sign_in/sign_in_notifier.dart';
 import 'package:tenant_app/features/auth/presentation/ui-models/sign_in_input.dart';
 
