@@ -4,7 +4,17 @@ A small tenant application built for the Flutter take-home assignment. Tenants c
 
 The project follows **Clean Architecture** with **Riverpod** for state management. The folder structure, naming, widgets, theming, localization and error-handling conventions mirror a production codebase I work on (Ulearna), with Riverpod taking the place of Bloc + GetIt.
 
-> 📸 **Screenshots / screen recording:** _add them to `docs/screenshots/` and link here._
+## Screenshots
+
+Captured on an iPhone 16 Pro simulator (`dev` flavor). All files are in [`docs/screenshots/`](docs/screenshots/).
+
+| Sign in | Home | Requests |
+|---|---|---|
+| <img src="docs/screenshots/01-sign-in.png" width="240"> | <img src="docs/screenshots/02-home.png" width="240"> | <img src="docs/screenshots/03-requests.png" width="240"> |
+| **Request details** | **New request** | **Submitted** |
+| <img src="docs/screenshots/04-request-details.png" width="240"> | <img src="docs/screenshots/05-create-request.png" width="240"> | <img src="docs/screenshots/06-request-submitted.png" width="240"> |
+| **Profile** | **Arabic (RTL)** | **Dark mode** |
+| <img src="docs/screenshots/07-profile.png" width="240"> | <img src="docs/screenshots/08-home-arabic.png" width="240"> | <img src="docs/screenshots/09-requests-dark.png" width="240"> |
 
 ---
 
