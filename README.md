@@ -119,8 +119,23 @@ I made the decisions and the assistant helped me deliver them faster. I set the 
 
 **What I did and reviewed myself**
 
-- Reviewed every change before committing it and ran each flow on the simulator
-- Made the design and product calls, and adjusted or rejected suggestions where they didn't fit. For example, I kept build flavors strictly required, chose how the mock backend should work, and decided which suggested improvements to include.
-- <!-- TODO(Akram): add one or two things you changed or built by hand -->
+- **Architecture and conventions:** I brought over the structure, naming, scripts and build flavors from the production app I work on, so the project reads like a real codebase rather than a demo.
+- **Technical decisions:**
+  - Flavors are required: there's no silent default, so every build states its environment.
+  - The original iOS scheme is kept, as in our production project.
+  - Generated code is committed, so the project runs right after cloning.
+  - Mocking happens at the HTTP level (a Dio interceptor) instead of with fake data sources, so the real Retrofit and Dio path is used everywhere.
+  - Freezed, Retrofit, `BaseResponse` and generated forms follow the same patterns as our production app.
+- **Hand fixes:**
+  - I resolved a widget name clash between `reactive_forms` and the app's own `ReactiveSwitchListTile`.
+  - I set up the demo tenant data.
+  - I spotted that an old signed-in session kept showing outdated profile data, and traced it to the cached user.
+- **Review and prioritisation:**
+  - I checked the app against the assignment brief and decided which issues to fix first: the logout and attachment edge cases, the RTL arrow, and the filter after submitting.
+  - I chose which design improvements to keep: the quick-services layout, the shrinking FAB and the confirmation screen.
+- **Verification:**
+  - I reviewed every change before committing it.
+  - I checked each flow on the iOS simulator, in English, Arabic and dark mode.
+  - I kept the analyzer clean and the test suite passing.
 
 I understand every part of the code and can explain or change any of it.
