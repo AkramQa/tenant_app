@@ -14,9 +14,38 @@ The project follows **Clean Architecture** with **Riverpod** for state managemen
 
 1. Unzip / clone the project.
 2. In Android Studio, choose **File → Open** and select the `tenant_app` folder (the one containing `pubspec.yaml`).
-3. Pick an emulator or device and press **▶ Run** on `main.dart`. Android Studio runs `pub get` automatically.
+3. Edit the `main.dart` run configuration and set **Build flavor** to `dev` (or `stg` / `prod`).
+4. Pick an emulator or device and press **▶ Run**. Android Studio runs `pub get` automatically.
 
-From the command line, the equivalent is `flutter run`. For iOS, `flutter run` on a simulator or open `ios/Runner.xcworkspace`.
+From the command line:
+
+```bash
+flutter run --flavor dev -t lib/main.dart
+flutter run --flavor stg -t lib/main.dart
+flutter run --flavor prod -t lib/main.dart
+```
+
+A flavor is required: plain `flutter run` fails because the Android and iOS projects define per-flavor targets. In Xcode, pick the `dev` / `stg` / `prod` scheme.
+
+### Flavors
+
+| Flavor | App name | Android applicationId | iOS bundle id |
+|---|---|---|---|
+| `dev` | Tenant Hub Dev | `com.tenantapp.tenant_app.dev` | `com.tenantapp.tenantApp.dev` |
+| `stg` | Tenant Hub Stg | `com.tenantapp.tenant_app.stg` | `com.tenantapp.tenantApp.stg` |
+| `prod` | Tenant Hub | `com.tenantapp.tenant_app` | `com.tenantapp.tenantApp` |
+
+Configured in the `flavorizr:` block of `pubspec.yaml`. At runtime `FlavorSettings` (`core/data/utils/flavor_settings.dart`) reads `appFlavor`, and `configurationProvider` exposes the flavor's `Configuration` (base URL etc.).
+
+### Scripts
+
+```bash
+./scripts/project_setup.sh          # pub get + flutter_flavorizr
+./scripts/clean_up.sh               # flutter clean + pub get + generate.sh
+./scripts/generate.sh               # build_runner (no generators yet)
+./scripts/generate_localizations.sh # intl_utils: lib/l10n/*.arb -> lib/generated
+./scripts/firebase_setup.sh         # flutterfire per flavor (fill the TODO project names first)
+```
 
 There is **no code-generation step**: models, forms, routes and translations are all plain Dart. The `android/` and `ios/` projects are included and already configured:
 - **iOS:** camera/photo permissions and Arabic localization
@@ -138,7 +167,7 @@ There is no real API. `MockApiClient` plays the role of the Dio/Retrofit client:
 - **Photos** are copied from the picker's temp folder into the app documents folder. Only the **file name** is persisted, and the absolute path is resolved at read time, because iOS changes the app container path between installs and updates.
 - **Status progression** is server-driven. With the mock API, new requests stay *Pending*; the seeded requests demonstrate the other states and the timeline.
 - **Models double as entities.** As in the reference codebase, data models (freezed) are used across layers instead of separate domain entities, which keeps a small app free of mapping boilerplate.
-- **Not included (out of scope):** flavors, Firebase/Crashlytics, push notifications, and CI.
+- **Not included (out of scope):** Firebase/Crashlytics (only the setup script), push notifications, and CI.
 
 ---
 

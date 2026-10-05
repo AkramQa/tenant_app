@@ -55,6 +55,54 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   mocktail: ^1.0.4
+  flutter_flavorizr: ^2.6.0
+  build_runner: ^2.15.1
+  intl_utils: ^2.8.16
 
 flutter:
   uses-material-design: true
+
+# Run command: dart run intl_utils:generate (./scripts/generate_localizations.sh)
+flutter_intl:
+  enabled: true
+
+# Run command: dart run flutter_flavorizr (./scripts/project_setup.sh)
+flavorizr:
+  flavors:
+    dev:
+      app:
+        name: "Tenant Hub Dev"
+      android:
+        applicationId: "com.tenantapp.tenant_app.dev"
+      ios:
+        bundleId: "com.tenantapp.tenantApp.dev"
+        variables:
+          FLUTTER_TARGET:
+            value: "lib/main.dart"
+    stg:
+      app:
+        name: "Tenant Hub Stg"
+      android:
+        applicationId: "com.tenantapp.tenant_app.stg"
+      ios:
+        bundleId: "com.tenantapp.tenantApp.stg"
+        variables:
+          FLUTTER_TARGET:
+            value: "lib/main.dart"
+    prod:
+      app:
+        name: "Tenant Hub"
+      android:
+        applicationId: "com.tenantapp.tenant_app"
+      ios:
+        bundleId: "com.tenantapp.tenantApp"
+        variables:
+          FLUTTER_TARGET:
+            value: "lib/main.dart"
+  instructions:
+    - assets:download
+    - assets:extract
+    - android:flavorizrGradle
+    - android:buildGradle
+    - ios:xcconfig
+    - assets:clean
