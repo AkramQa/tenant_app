@@ -54,6 +54,12 @@ class ServiceRequestModel extends Equatable {
         'image_file_name': imageFileName,
       };
 
+  /// Short, tenant-facing reference derived from the id, e.g. `REQ-3F9A1C2E`.
+  String get referenceNumber {
+    final String compact = id.replaceAll('-', '').toUpperCase();
+    return 'REQ-${compact.length > 8 ? compact.substring(0, 8) : compact}';
+  }
+
   ServiceRequestModel copyWith({
     RequestStatus? status,
     String? Function()? localImagePath,

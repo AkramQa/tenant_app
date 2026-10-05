@@ -110,7 +110,7 @@ class ServiceRequestsRemoteDataSourceImpl implements ServiceRequestsRemoteDataSo
     final DateTime now = clock();
     return [
       ServiceRequestModel(
-        id: 'seed-ac-001',
+        id: '3f9a1c2e-7b4d-4e21-9a6f-1c2d3e4f5a01',
         serviceType: ServiceType.acMaintenance,
         description: 'The living room AC is blowing warm air and making a rattling noise.',
         preferredDate: now.add(const Duration(days: 1)),
@@ -119,7 +119,7 @@ class ServiceRequestsRemoteDataSourceImpl implements ServiceRequestsRemoteDataSo
         createdAt: now.subtract(const Duration(hours: 3)),
       ),
       ServiceRequestModel(
-        id: 'seed-plumbing-001',
+        id: '8b2e4d61-0c3a-4f5e-b7d9-2a3b4c5d6e02',
         serviceType: ServiceType.plumbing,
         description: 'Water is leaking under the kitchen sink cabinet.',
         preferredDate: now.add(const Duration(days: 2)),
@@ -128,7 +128,7 @@ class ServiceRequestsRemoteDataSourceImpl implements ServiceRequestsRemoteDataSo
         createdAt: now.subtract(const Duration(days: 2)),
       ),
       ServiceRequestModel(
-        id: 'seed-electrical-001',
+        id: 'c47d9e13-5f2b-4a8c-9e1d-3b4c5d6e7f03',
         serviceType: ServiceType.electrical,
         description: 'Two power sockets in the master bedroom stopped working.',
         preferredDate: now.add(const Duration(days: 3)),
@@ -137,7 +137,7 @@ class ServiceRequestsRemoteDataSourceImpl implements ServiceRequestsRemoteDataSo
         createdAt: now.subtract(const Duration(days: 4)),
       ),
       ServiceRequestModel(
-        id: 'seed-cleaning-001',
+        id: 'e15b7a39-2d6c-4b0e-8f3a-4c5d6e7f8a04',
         serviceType: ServiceType.cleaning,
         description: 'Deep cleaning of the balcony and windows before guests arrive.',
         preferredDate: now.subtract(const Duration(days: 6)),

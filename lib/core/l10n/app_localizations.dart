@@ -232,6 +232,16 @@ class AppLocalizations {
 
   String get could_not_attach_photo => _t('could_not_attach_photo');
 
+  String get request_number => _t('request_number');
+
+  String get request_submitted_title => _t('request_submitted_title');
+
+  String request_submitted_description(String type) => _t('request_submitted_description').replaceAll('{type}', type);
+
+  String get view_request => _t('view_request');
+
+  String get back_to_home => _t('back_to_home');
+
   String get photo_unavailable => _t('photo_unavailable');
 
   String get contact_information => _t('contact_information');

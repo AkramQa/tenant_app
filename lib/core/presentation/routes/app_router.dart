@@ -7,9 +7,11 @@ import 'package:tenant_app/features/auth/presentation/screens/sign_in_screen.dar
 import 'package:tenant_app/features/home/presentation/screens/dashboard_home_screen.dart';
 import 'package:tenant_app/features/home/presentation/screens/home_screen.dart';
 import 'package:tenant_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:tenant_app/features/service_requests/data/models/service_request_model.dart';
 import 'package:tenant_app/features/service_requests/data/models/service_type.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/create_service_request_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_request_details_screen.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/service_request_submitted_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -73,6 +75,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           fullscreenDialog: true,
           child: CreateServiceRequestScreen(initialServiceType: state.extra as ServiceType?),
         ),
+      ),
+      GoRoute(
+        path: ServiceRequestSubmittedScreen.routePath,
+        builder: (context, state) =>
+            ServiceRequestSubmittedScreen(serviceRequest: state.extra! as ServiceRequestModel),
       ),
       GoRoute(
         path: ServiceRequestDetailsScreen.routePath,

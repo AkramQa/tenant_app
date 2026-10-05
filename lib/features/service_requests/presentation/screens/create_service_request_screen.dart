@@ -23,6 +23,7 @@ import 'package:tenant_app/features/service_requests/presentation/providers/crea
 import 'package:tenant_app/features/service_requests/presentation/providers/service_requests_filter/service_requests_filter_notifier.dart';
 import 'package:tenant_app/features/service_requests/presentation/ui-models/create_service_request_input.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_image_attachment_field.dart';
+import 'package:tenant_app/features/service_requests/presentation/screens/service_request_submitted_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/screens/service_requests_screen.dart';
 import 'package:tenant_app/features/service_requests/presentation/widgets/reactive_service_type_selection.dart';
 import 'package:tenant_app/injectable_module.dart';
@@ -57,12 +58,12 @@ class _CreateServiceRequestScreenState extends ConsumerState<CreateServiceReques
             failure: failure,
             customMessage: failure is CacheFailure ? context.l10n.could_not_attach_photo : null,
           );
-        case CreateServiceRequestSuccessful():
+        case CreateServiceRequestSuccessful(:final serviceRequest):
           stopLoading();
-          showSuccess(customMessage: context.l10n.request_submitted_successfully);
           ref.read(serviceRequestsFilterProvider.notifier).clear();
-          // Land on the Requests tab so the tenant sees the new request.
+          // Requests tab underneath, so backing out of the confirmation shows the new request.
           context.go(ServiceRequestsScreen.routePath);
+          context.push(ServiceRequestSubmittedScreen.routePath, extra: serviceRequest);
         case CreateServiceRequestInitial():
           break;
       }

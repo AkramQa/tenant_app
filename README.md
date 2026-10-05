@@ -69,9 +69,9 @@ flutter test
 |---|---|
 | **Login** (email or phone + password, validation, mocked auth) | Reactive form with `RequiredValidator`, custom `EmailOrPhoneValidator` and min-length. The mock API accepts the demo account by email or phone (local or international format). The token is kept in Keychain/Keystore (`flutter_secure_storage`) and the profile in shared preferences, so the session survives restarts. |
 | **Tenant Home** | Greeting card (name, property, unit), quick-access grid for the 5 service types (each pre-selects the type on the form), and recent requests (latest 3, "View all" switches to the Requests tab). |
-| **Create Service Request** | Service type chips, description (10–500 chars), preferred date (native iOS wheel / Material calendar, today → +90 days), urgent switch, optional photo (camera or gallery). On success, the request appears in the list and the app lands on the Requests tab. |
-| **Service Requests list** | Type, request date, status label, urgent badge, description preview; status filter chips; pull-to-refresh; tap → details. |
-| **Request Details** | Type, description, preferred date, status, created date, urgent flag, attached photo (tap for zoomable full screen) and a vertical progress timeline. |
+| **Create Service Request** | Service type chips, description (10–500 chars), preferred date (native iOS wheel / Material calendar, today → +90 days), urgent switch, optional photo (camera or gallery). On success a confirmation screen shows the request number (with haptic feedback), and the request is already at the top of the Requests tab underneath it. |
+| **Service Requests list** | Type, request date, status label, urgent badge, description preview; status filter chips with counts (reset after a new submission so it's never hidden); pull-to-refresh; tap → details. |
+| **Request Details** | Request number, type, description, preferred date, status, created date, urgent flag, attached photo (tap for zoomable full screen) and a vertical progress timeline. |
 | **Loading / empty / error states** | Shimmer skeletons and adaptive spinners; empty states with call-to-action; a shared `ErrorView` with retry; snackbars for action errors via the `ScreenUtils` mixin; blocking `ScreenLoader` during submits. |
 
 ### Bonus points covered
@@ -88,11 +88,11 @@ flutter test
 - **Localization: English and Arabic, with full RTL support.**
   - Directional paddings, alignment and icons
   - Language and theme (light/dark/system) can be switched in Profile and are persisted
-- **Unit and widget tests.**
-  - Validators
-  - Sign-in, list and create notifiers (including cache/offline paths)
-  - Repository (exception → failure mapping, attachment flow)
-  - Sign-in screen validation and the request card
+- **Unit and widget tests** (49).
+  - Validators and the request reference number
+  - Auth (session restore, logout incl. failure), sign-in, list, create and details notifiers (including cache/offline paths and concurrent refreshes)
+  - Repository (exception → failure mapping, attachment flow and cleanup)
+  - Sign-in screen, request card, status filter, Home recent requests (list/empty/error) and the confirmation screen
 - **Reusable components:** see `lib/core/presentation/widgets/`.
 - **Git history:** small, scoped commits.
 

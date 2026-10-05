@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tenant_app/core/presentation/providers/auth/auth_notifier.dart';
+import 'package:tenant_app/core/presentation/widgets/collapsible_fab_mixin.dart';
 import 'package:tenant_app/core/presentation/widgets/loader.dart';
 import 'package:tenant_app/core/presentation/widgets/responsive_center_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/spacer_widgets.dart';
@@ -23,17 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  /// The FAB shrinks to an icon once scrolled, so it hides less content.
-  bool _isFabExtended = true;
-
-  bool _onScroll(ScrollNotification notification) {
-    if (notification.depth != 0) return false;
-    final bool isExtended = notification.metrics.pixels <= 0;
-    if (isExtended != _isFabExtended) setState(() => _isFabExtended = isExtended);
-    return false;
-  }
-
+class _HomeScreenState extends ConsumerState<HomeScreen> with CollapsibleFabMixin {
   @override
   Widget build(BuildContext context) {
     final tenant = ref.watch(authProvider.select((state) => state is Authenticated ? state.user : null));
@@ -43,7 +34,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'home_fab',
         onPressed: () => context.push(CreateServiceRequestScreen.routePath),
-        isExtended: _isFabExtended,
+        isExtended: isFabExtended,
         tooltip: context.l10n.new_request,
         icon: const Icon(Icons.add_rounded),
         label: Text(context.l10n.new_request),
@@ -53,7 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: RefreshIndicator.adaptive(
           onRefresh: () => ref.read(serviceRequestsListProvider.notifier).fetchServiceRequests(),
           child: NotificationListener<ScrollNotification>(
-            onNotification: _onScroll,
+            onNotification: onScrollNotification,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               // Bottom padding keeps content clear of the FAB.

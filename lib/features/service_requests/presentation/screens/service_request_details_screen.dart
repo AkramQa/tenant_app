@@ -135,6 +135,12 @@ class _ServiceRequestDetailsBody extends StatelessWidget {
               child: Column(
                 children: [
                   BaseRowKeyValueWidget(
+                    icon: Icons.tag_rounded,
+                    keyAsString: context.l10n.request_number,
+                    value: serviceRequest.referenceNumber,
+                  ),
+                  const SpacerH12(),
+                  BaseRowKeyValueWidget(
                     icon: Icons.event_outlined,
                     keyAsString: context.l10n.preferred_date,
                     value: serviceRequest.preferredDate.toDisplayDate(context),

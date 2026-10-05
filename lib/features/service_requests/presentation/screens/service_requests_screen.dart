@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tenant_app/core/presentation/widgets/base_empty_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/base_icon_container_widget.dart';
+import 'package:tenant_app/core/presentation/widgets/collapsible_fab_mixin.dart';
 import 'package:tenant_app/core/presentation/widgets/error_view.dart';
 import 'package:tenant_app/core/presentation/widgets/responsive_center_widget.dart';
 import 'package:tenant_app/core/presentation/widgets/screen_utils.dart';
@@ -30,7 +31,7 @@ class ServiceRequestsScreen extends ConsumerStatefulWidget {
   ConsumerState<ServiceRequestsScreen> createState() => _ServiceRequestsScreenState();
 }
 
-class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> with ScreenUtils {
+class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> with ScreenUtils, CollapsibleFabMixin {
   @override
   Widget build(BuildContext context) {
     ref.listen<ServiceRequestsListState>(serviceRequestsListProvider, (previous, state) {
@@ -46,6 +47,8 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'service_requests_fab',
         onPressed: () => context.push(CreateServiceRequestScreen.routePath),
+        isExtended: isFabExtended,
+        tooltip: context.l10n.new_request,
         icon: const Icon(Icons.add_rounded),
         label: Text(context.l10n.new_request),
       ),
@@ -58,7 +61,10 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
             failure: failure,
             onRetry: () => fetchServiceRequests(),
           ),
-        final ServiceRequestsListSuccessful successfulState => _buildList(successfulState),
+        final ServiceRequestsListSuccessful successfulState => NotificationListener<ScrollNotification>(
+            onNotification: onScrollNotification,
+            child: _buildList(successfulState),
+          ),
       },
     );
   }
@@ -74,6 +80,11 @@ class _ServiceRequestsScreenState extends ConsumerState<ServiceRequestsScreen> w
       children: [
         RequestStatusFilterWidget(
           selectedStatus: selectedStatus,
+          counts: {
+            null: state.serviceRequests.length,
+            for (final status in RequestStatus.getValues())
+              status: state.serviceRequests.where((request) => request.status == status).length,
+          },
           onChanged: ref.read(serviceRequestsFilterProvider.notifier).select,
         ),
         const SpacerH8(),

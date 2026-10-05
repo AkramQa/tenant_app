@@ -9,10 +9,14 @@ class RequestStatusFilterWidget extends StatelessWidget {
   const RequestStatusFilterWidget({
     required this.selectedStatus,
     required this.onChanged,
+    this.counts = const {},
     super.key,
   });
 
   final RequestStatus? selectedStatus;
+
+  /// Requests per status; `null` key = all. Omitted statuses show no count.
+  final Map<RequestStatus?, int> counts;
   final ValueChanged<RequestStatus?> onChanged;
 
   @override
@@ -29,7 +33,7 @@ class RequestStatusFilterWidget extends StatelessWidget {
           final RequestStatus? status = options[index];
           final bool isSelected = status == selectedStatus;
           return ChoiceChip(
-            label: Text(status?.translated(context) ?? context.l10n.all),
+            label: Text(_label(context, status)),
             selected: isSelected,
             onSelected: (_) => onChanged(status),
             labelStyle: context.labelMedium?.copyWith(
@@ -40,5 +44,11 @@ class RequestStatusFilterWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String _label(BuildContext context, RequestStatus? status) {
+    final String name = status?.translated(context) ?? context.l10n.all;
+    final int? count = counts[status];
+    return count == null ? name : '$name · $count';
   }
 }
