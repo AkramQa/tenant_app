@@ -1,1 +1,5 @@
 #include "Generated.xcconfig"
+
+// Plain `flutter run` without --flavor builds the Runner scheme; name it so the icon is never blank.
+BUNDLE_NAME=Tenant Hub
+BUNDLE_DISPLAY_NAME=Tenant Hub

@@ -18,6 +18,8 @@ The app has three flavors, so pass one when running:
 flutter run --flavor dev
 ```
 
+> **Note:** plain `flutter run` (without `--flavor`) is not supported: Android fails to build and iOS builds an unconfigured app. Always pass `--flavor dev`, `stg` or `prod`.
+
 - **Android Studio:** open the project, set **Build flavor** to `dev` in the `main.dart` run configuration, then press ▶ Run.
 - **Xcode:** open `ios/Runner.xcworkspace` and pick the `dev` scheme.
 
