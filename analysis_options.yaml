@@ -10,3 +10,8 @@ linter:
 analyzer:
   exclude:
     - lib/generated/**
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - '**/*.gform.dart'
+  errors:
+    invalid_annotation_target: ignore
