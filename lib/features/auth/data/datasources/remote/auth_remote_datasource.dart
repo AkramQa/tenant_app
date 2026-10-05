@@ -32,7 +32,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   static const TenantInfoModel _demoTenant = TenantInfoModel(
     tenantId: 'tenant-001',
-    fullName: 'Sara Al Mansoori',
+    fullName: 'Akram Qassem',
     email: kDemoEmail,
     phoneNumber: kDemoPhoneNumber,
     propertyName: 'Marina Heights Residence',
