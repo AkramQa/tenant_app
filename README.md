@@ -127,7 +127,6 @@ I made the decisions and the assistant helped me deliver them faster. I set the 
   - Mocking happens at the HTTP level (a Dio interceptor) instead of with fake data sources, so the real Retrofit and Dio path is used everywhere.
   - Freezed, Retrofit, `BaseResponse` and generated forms follow the same patterns as our production app.
 - **Hand fixes:**
-  - I resolved a widget name clash between `reactive_forms` and the app's own `ReactiveSwitchListTile`.
   - I set up the demo tenant data.
   - I spotted that an old signed-in session kept showing outdated profile data, and traced it to the cached user.
 - **Review and prioritisation:**
