@@ -24,11 +24,13 @@ Captured on an iPhone 16 Pro simulator (`dev` flavor). All files are in [`docs/s
 
 1. Unzip / clone the project.
 2. In Android Studio, choose **File → Open** and select the `tenant_app` folder (the one containing `pubspec.yaml`).
-3. Pick an emulator or device and press **▶ Run** on `main.dart`. Android Studio runs `pub get` automatically.
+3. Edit the `main.dart` run configuration and set **Build flavor** to `dev` (or `stg` / `prod`).
+4. Pick an emulator or device and press **▶ Run**. Android Studio runs `pub get` automatically.
 
-From the command line, the equivalent is `flutter run` (iOS: `flutter run` on a simulator). It builds the `dev` flavor by default (`default-flavor` in `pubspec.yaml`). To pick another flavor:
+From the command line, pass a flavor (required, on both Android and iOS):
 
 ```bash
+flutter run --flavor dev
 flutter run --flavor stg
 flutter run --flavor prod
 ```
